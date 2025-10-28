@@ -8,11 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.fittracker"
-<<<<<<< HEAD
-        minSdk = 34
-=======
         minSdk = 33
->>>>>>> eeb71f6 (project base)
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"

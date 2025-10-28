@@ -1,3 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FitTracker</string>
+    <string name="app_name">Fitness Tracker Lite</string>
+
+    <!-- Log In -->
+    <string name="login_title">Welcome</string>
+    <string name="login_subtitle">Enter your credential to proceed</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="btn_login">Enter</string>
+    <string name="remember_check">Remember me</string>
+    <string name="forgot_password">Forgot you password?</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="signup_link">Sign Up</string>
+
+    <!-- Sign Up -->
+    <string name="signup_title">Create Account</string>
+    <string name="signup_subtitle">Entre para continuar</string>
+    <string name="name_hint">Full Name</string>
+    <string name="age_hint">Age</string>
+    <string name="weight_hint">Weight (kg)</string>
+    <string name="height_hint">Height (cm)</string>
+    <string name="btn_signup">Create</string>
+    <string name="account_txt">Already have an account? </string>
+    <string name="login_link">Log In</string>
+
+    <!-- Recover Password -->
+    <string name="password_title">Password Recovery</string>
+    <string name="password_subtitle">Insert and confirm new password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="new_password_hint">New Password</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="remembered_password_txt">Remembered your pasword? </string>
+
+    <!-- Validações -->
+    <string name="error_email_empty">Email é obrigatório</string>
+    <string name="error_email_invalid">Email inválido</string>
+    <string name="error_password_empty">Password é obrigatória</string>
+    <string name="error_password_short">Password deve ter pelo menos 6 caracteres</string>
 </resources>

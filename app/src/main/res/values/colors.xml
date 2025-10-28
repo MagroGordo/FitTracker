@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Cores Principais -->
+    <color name="black">#000000</color>
+    <color name="black_primary">#121212</color>
+    <color name="black_secondary">#1E1E1E</color>
+
+    <!-- Cores Laranja -->
+    <color name="orange_primary">#FF6B35</color>
+    <color name="orange_secondary">#FF8C42</color>
+    <color name="orange_light">#FFB088</color>
+
+    <!-- Cores Cinza -->
+    <color name="gray_dark">#2C2C2C</color>
+    <color name="gray_medium">#757575</color>
+    <color name="gray_light">#E0E0E0</color>
+
+    <!-- Cores de Texto -->
+    <color name="white">#FFFFFF</color>
+    <color name="text_secondary">#9CA3AF</color>
+
+    <!-- Cores de Estado -->
+    <color name="success">#4CAF50</color>
+    <color name="error">#EF5350</color>
+    <color name="warning">#FFA726</color>
+
+    <!-- Transparências -->
+    <color name="black_overlay">#80000000</color>
+    <color name="orange_overlay">#20FF6B35</color>
 </resources>
