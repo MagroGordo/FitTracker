@@ -1,9 +1,11 @@
-package com.example.fittracker;
+package com.example.fittracker.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.fittracker.R;
 
 public class RecoverPasswordActivity extends AppCompatActivity {
 
