@@ -18,21 +18,16 @@ public class User {
     private String email;
     private String password;
     private String gender;
-    private int age;
+    private Date birthday;
     private double weight;
     private double height;
 
-    @ColumnInfo(name = "profile_photo")
-    private String profilePhoto;
 
     @ColumnInfo(name = "created_at")
     private Date createdAt;
 
     @ColumnInfo(name = "updated_at")
     private Date updatedAt;
-
-    @ColumnInfo(name = "last_login")
-    private Date lastLogin;
 
     private boolean synced;
 
@@ -65,8 +60,9 @@ public class User {
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
 
-    public int getAge() { return age; }
-    public void setAge(int age) { this.age = age; }
+    public Date getBirthday() { return birthday; }
+
+    public void setBirthday(Date birthday) { this.birthday = birthday; }
 
     public double getWeight() { return weight; }
     public void setWeight(double weight) { this.weight = weight; }
@@ -74,17 +70,11 @@ public class User {
     public double getHeight() { return height; }
     public void setHeight(double height) { this.height = height; }
 
-    public String getProfilePhoto() { return profilePhoto; }
-    public void setProfilePhoto(String profilePhoto) { this.profilePhoto = profilePhoto; }
-
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 
     public Date getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
-
-    public Date getLastLogin() { return lastLogin; }
-    public void setLastLogin(Date lastLogin) { this.lastLogin = lastLogin; }
 
     public boolean isSynced() { return synced; }
     public void setSynced(boolean synced) { this.synced = synced; }
@@ -95,7 +85,7 @@ public class User {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", age=" + age +
+                ", birthday=" + birthday +
                 ", weight=" + weight +
                 ", height=" + height +
                 '}';

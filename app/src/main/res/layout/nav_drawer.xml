@@ -12,11 +12,13 @@
         android:layout_height="140dp"
         android:orientation="vertical"
         android:gravity="center"
+        android:background="@drawable/btn_orange"
         android:padding="16dp">
 
         <View
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:background="@drawable/profile_circle"
             android:layout_marginBottom="8dp" />
 
         <TextView
@@ -49,6 +51,7 @@
             android:id="@+id/navDashboard"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@drawable/btn_orange"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingHorizontal="16dp"
@@ -57,6 +60,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:src="@drawable/ic_dashboard"
                 android:layout_marginEnd="12dp" />
 
             <TextView
@@ -81,6 +85,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:src="@drawable/ic_workouts"
                 android:layout_marginEnd="12dp" />
 
             <TextView
@@ -104,6 +109,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:src="@drawable/ic_user"
                 android:layout_marginEnd="12dp" />
 
             <TextView
@@ -132,6 +138,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:src="@drawable/ic_logout"
                 android:layout_marginEnd="12dp" />
 
             <TextView

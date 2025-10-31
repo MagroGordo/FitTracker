@@ -6,10 +6,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.example.fittracker.database.DateConverter;
-import com.example.fittracker.database.dao.GoalDAO;
-import com.example.fittracker.database.dao.UserDAO;
-import com.example.fittracker.database.dao.WorkoutDAO;
+import com.example.fittracker.database.daos.GoalDAO;
+import com.example.fittracker.database.daos.UserDAO;
+import com.example.fittracker.database.daos.WorkoutDAO;
 import com.example.fittracker.database.entities.Goal;
 import com.example.fittracker.database.entities.User;
 import com.example.fittracker.database.entities.Workout;
