@@ -29,8 +29,8 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="16dp"
+                android:src="@mipmap/ic_launcher_foreground"
                 android:background="@drawable/icon_bg"
-                android:padding="12dp"
                 android:contentDescription="@string/app_name" />
 
             <!-- Título -->

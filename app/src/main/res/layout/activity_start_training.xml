@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:padding="35dp"
+    android:clipToPadding="false"
+    android:fillViewport="true">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="24dp">
+
+      <View
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:background="@drawable/profile_circle" />
+
+      <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:orientation="vertical"
+          android:layout_marginStart="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Olá, João"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:fontFamily="maven_pro" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Escolha a sua atividade"
+            android:textColor="#D1D5DB"
+            android:textSize="14sp"
+            android:fontFamily="maven_pro" />
+      </LinearLayout>
+
+      <ImageView
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:src="@drawable/ic_menu" />
+    </LinearLayout>
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Iniciar Treino"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:fontFamily="maven_pro"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Escolha a sua atividade"
+        android:textColor="#9CA3AF"
+        android:textSize="14sp"
+        android:fontFamily="maven_pro"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Opções de treino -->
+    <LinearLayout
+        android:id="@+id/optionCorrida"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/box_unselected"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+      <ImageView
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:src="@drawable/ic_walk" />
+
+      <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:orientation="vertical"
+          android:layout_marginStart="12dp">
+
+        <TextView
+            android:id="@+id/txtCorrida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Corrida"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:fontFamily="maven_pro" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Toque para selecionar"
+            android:textColor="#D1D5DB"
+            android:textSize="14sp"
+            android:fontFamily="maven_pro" />
+      </LinearLayout>
+
+      <View
+          android:id="@+id/radioCorrida"
+          android:layout_width="16dp"
+          android:layout_height="16dp"
+          android:visibility="gone"
+          android:background="@drawable/radio_selected" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/optionCiclismo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/box_unselected"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="24dp">
+
+      <ImageView
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:src="@drawable/ic_bike" />
+
+      <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:orientation="vertical"
+          android:layout_marginStart="12dp">
+
+        <TextView
+            android:id="@+id/txtCiclismo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ciclismo"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:fontFamily="maven_pro" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Toque para selecionar"
+            android:textColor="#D1D5DB"
+            android:textSize="14sp"
+            android:fontFamily="maven_pro" />
+      </LinearLayout>
+
+      <View
+          android:id="@+id/radioCiclismo"
+          android:layout_width="16dp"
+          android:layout_height="16dp"
+          android:visibility="gone"
+          android:background="@drawable/radio_selected" />
+    </LinearLayout>
+
+    <!-- Botão principal -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnComecarAgora"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Começar Agora"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:fontFamily="maven_pro"
+        android:background="@drawable/btn_orange"
+        app:backgroundTint="@null"
+        android:drawablePadding="8dp" />
+  </LinearLayout>
+</ScrollView>

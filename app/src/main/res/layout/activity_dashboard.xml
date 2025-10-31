@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="33dp">
 
         <!-- Header -->
         <LinearLayout
@@ -52,7 +52,8 @@
 
             <ImageView
                 android:layout_width="24dp"
-                android:layout_height="24dp" />
+                android:layout_height="24dp"
+                android:src="@drawable/ic_menu" />
         </LinearLayout>
 
         <!-- Último Treino -->

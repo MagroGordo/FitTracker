@@ -12,10 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitTracker">
         <activity
-            android:name=".activities.DashboardActivity"
+            android:name=".activities.ProfileActivity"
             android:exported="false" />
-        <activity android:name=".activities.RecoverPasswordActivity" />
-        <activity android:name=".activities.SignUpActivity" />
+        <!-- Dashboard -->
+        <activity
+            android:name=".activities.DashboardActivity"
+            android:exported="false" /> <!-- Recuperar Palavra-Passe -->
+        <activity
+            android:name=".activities.RecoverPasswordActivity"
+            android:exported="false" /> <!-- Registar -->
+        <activity
+            android:name=".activities.SignUpActivity"
+            android:exported="false" /> <!-- Iniciar Treino -->
+        <activity
+            android:name=".activities.StartTrainingActivity"
+            android:exported="false" /> <!-- Login (Activity Principal) -->
         <activity
             android:name=".activities.LogInActivity"
             android:exported="true">
