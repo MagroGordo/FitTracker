@@ -38,5 +38,6 @@ public interface GoalDAO {
     @Query("DELETE FROM goals WHERE user_id = :userId")
     void deleteAllByUser(long userId);
 
+    @Query("SELECT * FROM goals WHERE user_id = :userId LIMIT 1")
     Goal getByUser(long userId);
 }

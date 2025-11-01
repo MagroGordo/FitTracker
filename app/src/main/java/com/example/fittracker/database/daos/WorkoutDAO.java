@@ -44,9 +44,15 @@ public interface WorkoutDAO {
     @Query("DELETE FROM workouts WHERE user_id = :userId")
     void deleteAllByUser(long userId);
 
+    // FIXED: Added @Query annotation
+    @Query("SELECT * FROM workouts WHERE user_id = :userId")
     List<Workout> listByUser(long userId);
 
+    // FIXED: Added @Query annotation (assuming a 'type' column exists)
+    @Query("SELECT * FROM workouts WHERE user_id = :userId AND type = :type")
     List<Workout> listByUserAndType(long userId, String type);
 
+    // FIXED: Added @Query annotation (assuming a 'start_time' column exists)
+    @Query("SELECT * FROM workouts WHERE user_id = :userId AND start_time BETWEEN :from AND :to")
     List<Workout> listBetweenDates(long userId, Date from, Date to);
 }

@@ -12,9 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitTracker">
         <activity
-            android:name=".activities.ProfileActivity"
+            android:name=".activities.EditDataActivity"
             android:exported="false" />
-        <!-- Dashboard -->
+        <activity
+            android:name=".activities.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.WorkoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:exported="false" /> <!-- Dashboard -->
         <activity
             android:name=".activities.DashboardActivity"
             android:exported="false" /> <!-- Recuperar Palavra-Passe -->
