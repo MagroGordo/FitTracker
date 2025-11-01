@@ -230,6 +230,25 @@ public class DashboardActivity extends AppCompatActivity {
         if (tvHeaderEmail != null) tvHeaderEmail.setText(fallbackEmail != null ? fallbackEmail : "");
         if (tvDrawerEmail != null) tvDrawerEmail.setText(fallbackEmail != null ? fallbackEmail : "");
 
+        // Sincronizar workouts do Firestore PRIMEIRO
+        workoutRepo.syncFromFirebase(firebaseUid, new WorkoutRepository.SyncCallback() {
+            @Override
+            public void onComplete() {
+                android.util.Log.d("Dashboard", "✅ Workouts sincronizados com sucesso");
+                // Após sincronização, carregar dados do utilizador
+                loadUserAndWorkouts(firebaseUid, fallbackEmail);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                android.util.Log.e("Dashboard", "❌ Erro ao sincronizar workouts", e);
+                // Mesmo com erro, tentar carregar dados locais
+                loadUserAndWorkouts(firebaseUid, fallbackEmail);
+            }
+        });
+    }
+
+    private void loadUserAndWorkouts(String firebaseUid, String fallbackEmail) {
         // Tenta Room primeiro
         io.execute(() -> {
             try {
@@ -237,14 +256,9 @@ public class DashboardActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (local != null) {
                         bindUserToUI(local, fallbackEmail);
-                        if (local.getId() > 0) {
-                            loadLastWorkout(local.getId());
-                        } else {
-                            showDashedLastWorkout();
-                        }
-                    } else {
-                        showDashedLastWorkout();
                     }
+                    // MUDANÇA: usar firebaseUid em vez de userId
+                    loadLastWorkoutByFirebaseUid(firebaseUid);
                 });
             } catch (Exception e) {
                 android.util.Log.e("Dashboard", "Erro ao carregar utilizador local", e);
@@ -257,25 +271,7 @@ public class DashboardActivity extends AppCompatActivity {
             @Override public void onLoaded(User user) {
                 runOnUiThread(() -> {
                     bindUserToUI(user, fallbackEmail);
-                    if (user != null && user.getId() > 0) {
-                        loadLastWorkout(user.getId());
-                    } else {
-                        io.execute(() -> {
-                            try {
-                                User local = userRepo.getByFirebaseUid(firebaseUid);
-                                runOnUiThread(() -> {
-                                    if (local != null && local.getId() > 0) {
-                                        loadLastWorkout(local.getId());
-                                    } else {
-                                        showDashedLastWorkout();
-                                    }
-                                });
-                            } catch (Exception e) {
-                                android.util.Log.e("Dashboard", "Erro ao recarregar utilizador local", e);
-                                runOnUiThread(DashboardActivity.this::showDashedLastWorkout);
-                            }
-                        });
-                    }
+                    loadLastWorkoutByFirebaseUid(firebaseUid);
                 });
             }
             @Override public void onError(Exception e) {
@@ -309,18 +305,20 @@ public class DashboardActivity extends AppCompatActivity {
         if (tvUltTreinoVel != null) tvUltTreinoVel.setText("—");
     }
 
-    private void loadLastWorkout(long userId) {
-        if (userId <= 0) {
+    private void loadLastWorkoutByFirebaseUid(String firebaseUid) {
+        if (firebaseUid == null || firebaseUid.isEmpty()) {
             runOnUiThread(this::showDashedLastWorkout);
             return;
         }
         io.execute(() -> {
             try {
-                Workout last = workoutRepo.getLastWorkout(userId);
+                Workout last = workoutRepo.getLastWorkoutByFirebaseUid(firebaseUid);
                 runOnUiThread(() -> {
                     if (last == null) {
+                        android.util.Log.d("Dashboard", "❌ Nenhum workout encontrado para firebaseUid: " + firebaseUid);
                         showDashedLastWorkout();
                     } else {
+                        android.util.Log.d("Dashboard", "✅ Workout encontrado: " + last.getType() + " - " + last.getDistance() + "km");
                         bindLastWorkout(last);
                     }
                 });

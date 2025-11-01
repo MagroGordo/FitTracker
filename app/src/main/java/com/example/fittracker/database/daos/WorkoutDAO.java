@@ -44,4 +44,10 @@ public interface WorkoutDAO {
 
     @Query("SELECT * FROM workouts WHERE user_id = :userId AND start_time BETWEEN :from AND :to")
     List<Workout> listBetweenDates(long userId, Date from, Date to);
+
+    @Query("SELECT * FROM workouts WHERE firebase_uid = :firebaseUid ORDER BY date DESC LIMIT 1")
+    Workout getLastWorkoutByFirebaseUid(String firebaseUid);
+
+    @Query("SELECT * FROM workouts WHERE firebase_uid = :firebaseUid ORDER BY date DESC")
+    List<Workout> getAllWorkoutsByFirebaseUid(String firebaseUid);
 }

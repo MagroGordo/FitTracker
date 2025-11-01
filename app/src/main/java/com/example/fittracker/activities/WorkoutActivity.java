@@ -21,6 +21,8 @@ import com.example.fittracker.database.entities.User;
 import com.example.fittracker.database.entities.Workout;
 import com.example.fittracker.database.repositories.UserRepository;
 import com.example.fittracker.database.repositories.WorkoutRepository;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -35,6 +37,8 @@ import java.util.concurrent.Executors;
 public class WorkoutActivity extends AppCompatActivity {
 
     private static final int REQ_LOCATION = 1001;
+    private static final float MIN_DISTANCE_KM = 0.01f; // Mínimo 10 metros
+    private static final long MIN_DURATION_MS = 10000L; // Mínimo 10 segundos
 
     // UI
     private TextView tvLatitude, tvLongitude, tvDistancia, tvCalorias, tvVelocidade, tvTempo;
@@ -96,11 +100,7 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         };
 
-        btnFinish.setOnClickListener(v -> {
-            stopLocationUpdates();
-            stopTimer();
-            saveWorkoutAndExit();
-        });
+        btnFinish.setOnClickListener(v -> handleFinishWorkout());
 
         requestLocationPermissions();
     }
@@ -135,7 +135,7 @@ public class WorkoutActivity extends AppCompatActivity {
         timerHandler.post(timerRunnable);
 
         LocationRequest locationRequest = LocationRequest.create()
-                .setInterval(2000)            // 2s
+                .setInterval(2000)    // 2s
                 .setFastestInterval(1000)
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -202,6 +202,47 @@ public class WorkoutActivity extends AppCompatActivity {
         tvCalorias.setText(String.valueOf(kcal));
     }
 
+    private void handleFinishWorkout() {
+        WorkoutValidationResult validation = validateWorkout();
+
+        if (!validation.isValid()) {
+            Toast.makeText(this, validation.getErrorMessage(), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        stopLocationUpdates();
+        stopTimer();
+        saveWorkoutAndExit();
+    }
+
+    private WorkoutValidationResult validateWorkout() {
+        final float km = totalDistanceMeters / 1000f;
+        final int kcal = (int) Math.max(0, Math.round(km * kcalPerKm));
+        final long durationMs = elapsedMs;
+
+        // Validar distância
+        if (km < MIN_DISTANCE_KM) {
+            return new WorkoutValidationResult(false,
+                    "Distância insuficiente. É necessário pelo menos " +
+                            String.format(Locale.getDefault(), "%.2f km", MIN_DISTANCE_KM));
+        }
+
+        // Validar duração
+        if (durationMs < MIN_DURATION_MS) {
+            long minSeconds = MIN_DURATION_MS / 1000;
+            return new WorkoutValidationResult(false,
+                    "Duração insuficiente. É necessário pelo menos " + minSeconds + " segundos");
+        }
+
+        // Validar calorias (se a distância e duração estão OK, as calorias não devem ser 0)
+        if (kcal < 0) {
+            return new WorkoutValidationResult(false,
+                    "Calorias inválidas. Continua o treino para registar valores válidos");
+        }
+
+        return new WorkoutValidationResult(true, null);
+    }
+
     private void stopLocationUpdates() {
         if (fusedClient != null && locationCallback != null) {
             fusedClient.removeLocationUpdates(locationCallback);
@@ -236,6 +277,16 @@ public class WorkoutActivity extends AppCompatActivity {
 
         ioExecutor.execute(() -> {
             try {
+                // Obter o UID diretamente do Firebase Auth (sessão atual)
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (firebaseUser == null) {
+                    runOnUiThread(() -> Toast.makeText(this, "Sessão expirada", Toast.LENGTH_SHORT).show());
+                    goToDashboard(false);
+                    return;
+                }
+
+                String firebaseUid = firebaseUser.getUid();
+
                 User current = userRepo.getFirstUser();
                 if (current == null) {
                     runOnUiThread(() -> Toast.makeText(this, "Utilizador não encontrado", Toast.LENGTH_SHORT).show());
@@ -244,22 +295,17 @@ public class WorkoutActivity extends AppCompatActivity {
                 }
 
                 Workout w = new Workout();
-                // Campos conforme a tua entidade (ajusta se os nomes forem diferentes)
                 w.setUserId(current.getId());
-                w.setType(workoutType); // "run" | "bike"
-                w.setDistance(km);      // se o teu campo for distanceKm, ajusta o setter
-                w.setDuration((int) durationMs); // se guardas em long, ajusta o tipo/setter
+                w.setType(workoutType);
+                w.setDistance(km);
+                w.setDuration((int) durationMs);
                 w.setCalories((double) kcal);
                 w.setAvgSpeed((double) avgKmh);
                 w.setDate(new Date());
 
-                // Opcional: se tiveres start/end time ou coordenadas
-                // w.setStartTime(new Date(System.currentTimeMillis() - durationMs));
-                // w.setEndTime(new Date());
-                // w.setStartLatitude(...); w.setStartLongitude(...);
-                // w.setEndLatitude(...);   w.setEndLongitude(...);
-
-                workoutRepo.insertLocal(w);
+                // Usar o UID correto do Firebase Auth
+                workoutRepo.insertAndSync(w, firebaseUid);
+                android.util.Log.d("WorkoutActivity", "Workout saved and syncing to Firestore for user: " + firebaseUid);
 
                 runOnUiThread(() -> Toast.makeText(this, "Treino guardado!", Toast.LENGTH_SHORT).show());
                 goToDashboard(true);
@@ -304,6 +350,27 @@ public class WorkoutActivity extends AppCompatActivity {
                 Toast.makeText(this, "Permissão de localização é necessária", Toast.LENGTH_LONG).show();
                 finish();
             }
+        }
+    }
+
+    /**
+     * Classe interna para encapsular o resultado da validação do treino
+     */
+    private static class WorkoutValidationResult {
+        private final boolean valid;
+        private final String errorMessage;
+
+        public WorkoutValidationResult(boolean valid, String errorMessage) {
+            this.valid = valid;
+            this.errorMessage = errorMessage;
+        }
+
+        public boolean isValid() {
+            return valid;
+        }
+
+        public String getErrorMessage() {
+            return errorMessage;
         }
     }
 }

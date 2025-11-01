@@ -15,7 +15,7 @@ import java.util.Date;
                 childColumns = "user_id",
                 onDelete = ForeignKey.CASCADE
         ),
-        indices = {@Index("user_id")}
+        indices = {@Index("user_id"), @Index("firebase_uid")}
 )
 public class Workout {
 
@@ -28,6 +28,9 @@ public class Workout {
 
     @ColumnInfo(name = "firebase_id")
     private String firebaseId;
+
+    @ColumnInfo(name = "firebase_uid")
+    private String firebaseUid;
 
     @ColumnInfo(name = "user_id")
     private long userId;
@@ -81,6 +84,9 @@ public class Workout {
 
     public String getFirebaseId() { return firebaseId; }
     public void setFirebaseId(String firebaseId) { this.firebaseId = firebaseId; }
+
+    public String getFirebaseUid() { return firebaseUid; }
+    public void setFirebaseUid(String firebaseUid) { this.firebaseUid = firebaseUid; }
 
     public long getUserId() { return userId; }
     public void setUserId(long userId) { this.userId = userId; }

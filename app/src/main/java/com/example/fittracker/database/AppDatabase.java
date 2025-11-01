@@ -14,7 +14,7 @@ import com.example.fittracker.database.daos.WorkoutDAO;
 import com.example.fittracker.database.daos.GoalDAO;
 import com.example.fittracker.database.DateConverter;
 
-@Database(entities = {User.class, Workout.class, Goal.class}, version = 1)
+@Database(entities = {User.class, Workout.class, Goal.class}, version = 2)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
