@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -17,7 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.fittracker.R;
 import com.example.fittracker.core.Prefs;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import android.widget.Toast;
 
 public class StartTrainingActivity extends AppCompatActivity {
 
@@ -34,7 +33,7 @@ public class StartTrainingActivity extends AppCompatActivity {
 
     // Cores
     private final int colorOrange = 0xFFF97316;
-    private final int colorWhite = 0xFFFFFFFF;
+    private final int colorWhite = 0xFFFF;
 
     private Button btnStart;
 
@@ -118,6 +117,7 @@ public class StartTrainingActivity extends AppCompatActivity {
 
         if (navTreinos != null) {
             navTreinos.setOnClickListener(v -> {
+                // Já estamos nesta tela
                 drawerLayout.closeDrawer(GravityCompat.START);
             });
         }
@@ -137,56 +137,15 @@ public class StartTrainingActivity extends AppCompatActivity {
             });
         }
 
+        // Destacar item ativo: TREINOS
         highlightCurrentNav(NavItem.TREINOS);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        validateSession();
-    }
-
-    private void validateSession() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        boolean remember = Prefs.isRememberMe(getApplicationContext());
-        FirebaseUser current = auth.getCurrentUser();
-
-        if (current == null || !remember) {
-            if (current != null && !remember) {
-                auth.signOut();
-            }
-            redirectToLogin();
-            return;
-        }
-
-        current.reload().addOnCompleteListener(task -> {
-            if (!task.isSuccessful() || auth.getCurrentUser() == null) {
-                auth.signOut();
-                Prefs.setRememberMe(getApplicationContext(), false);
-                Toast.makeText(this, "Sessão inválida.", Toast.LENGTH_SHORT).show();
-                redirectToLogin();
-            }
-        });
-    }
-
-    private void performLogout() {
-        FirebaseAuth.getInstance().signOut();
-        Prefs.setRememberMe(getApplicationContext(), false);
-        Toast.makeText(this, "Sessão terminada.", Toast.LENGTH_SHORT).show();
-        redirectToLogin();
-    }
-
-    private void redirectToLogin() {
-        Intent i = new Intent(this, LogInActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-        finish();
     }
 
     private void setSelectableOption(LinearLayout option, int titleId, int radioId) {
         if (option == null) return;
 
         option.setOnClickListener(v -> {
+            // Remove seleção anterior
             if (selectedOption != null) {
                 selectedOption.setBackgroundResource(R.drawable.box_unselected);
 
@@ -197,6 +156,7 @@ public class StartTrainingActivity extends AppCompatActivity {
                 if (previousRadio != null) previousRadio.setVisibility(View.GONE);
             }
 
+            // Marca nova seleção
             selectedOption = option;
             selectedOption.setBackgroundResource(R.drawable.box_selected);
 
@@ -208,6 +168,7 @@ public class StartTrainingActivity extends AppCompatActivity {
         });
     }
 
+    // Funções auxiliares
     private int getTitleId(LinearLayout option) {
         if (option.getId() == R.id.optionCorrida) return R.id.txtCorrida;
         if (option.getId() == R.id.optionCiclismo) return R.id.txtCiclismo;
@@ -220,14 +181,34 @@ public class StartTrainingActivity extends AppCompatActivity {
         return -1;
     }
 
+    // Destaque do item ativo no nav
     private void highlightCurrentNav(NavItem active) {
-        setNavState(navDashboard, active == NavItem.DASHBOARD);
-        setNavState(navTreinos, active == NavItem.TREINOS);
-        setNavState(navPerfil, active == NavItem.PERFIL);
+        setNavState(navDashboard, R.id.navDashboardLabel, active == NavItem.DASHBOARD);
+        setNavState(navTreinos, R.id.navTreinosLabel, active == NavItem.TREINOS);
+        setNavState(navPerfil, R.id.navPerfilLabel, active == NavItem.PERFIL);
+        // Logout nunca fica selecionado
+        setNavState(navLogout, R.id.navLogoutLabel, false);
     }
 
-    private void setNavState(LinearLayout container, boolean selected) {
+    private void performLogout() {
+        FirebaseAuth.getInstance().signOut();
+        Prefs.setRememberMe(getApplicationContext(), false);
+        Toast.makeText(this, "Sessão terminada", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, LogInActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    private void setNavState(LinearLayout container, int labelId, boolean selected) {
         if (container == null) return;
-        container.setBackgroundResource(selected ? R.drawable.btn_orange : 0);
+
+        container.setBackgroundResource(selected ? R.drawable.btn_orange : R.drawable.nav_item_default);
+
+        TextView label = container.findViewById(labelId);
+        if (label != null) {
+            label.setTextColor(0xFFFF); // branco
+            label.setTypeface(label.getTypeface(), selected ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
+        }
     }
 }
