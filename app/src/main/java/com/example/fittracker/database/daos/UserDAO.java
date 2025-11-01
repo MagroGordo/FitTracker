@@ -5,7 +5,6 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.fittracker.database.entities.User;
@@ -34,6 +33,10 @@ public interface UserDAO {
     // Obter utilizador por e-mail (para login)
     @Query("SELECT * FROM users WHERE email = :email LIMIT 1")
     User getUserByEmail(String email);
+
+    // Obter utilizador por Firebase UID
+    @Query("SELECT * FROM users WHERE firebase_uid = :uid LIMIT 1")
+    User getByFirebaseUid(String uid);
 
     // Obter todos os utilizadores (opcional)
     @Query("SELECT * FROM users ORDER BY name ASC")

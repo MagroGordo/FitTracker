@@ -30,7 +30,7 @@ public class LogInActivity extends AppCompatActivity {
 
     private static final String TAG = "LogInActivity";
 
-    private TextView txtRegistar, txtEsqueceuPassword;
+    private TextView txtRegistar;
     private Button btnEntrar;
     private EditText inputEmail, inputPassword;
     private CheckBox rememberMe;
@@ -49,7 +49,6 @@ public class LogInActivity extends AppCompatActivity {
 
         // Bind UI
         txtRegistar = findViewById(R.id.txtRegister);
-        txtEsqueceuPassword = findViewById(R.id.txtForgot);
         btnEntrar = findViewById(R.id.btnLogin);
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
@@ -58,12 +57,6 @@ public class LogInActivity extends AppCompatActivity {
         // Registo
         txtRegistar.setOnClickListener(v -> {
             Intent intent = new Intent(LogInActivity.this, SignUpActivity.class);
-            startActivity(intent);
-        });
-
-        // Recuperação de password
-        txtEsqueceuPassword.setOnClickListener(v -> {
-            Intent intent = new Intent(LogInActivity.this, RecoverPasswordActivity.class);
             startActivity(intent);
         });
 

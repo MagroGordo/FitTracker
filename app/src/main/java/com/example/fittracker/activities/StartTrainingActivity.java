@@ -202,13 +202,11 @@ public class StartTrainingActivity extends AppCompatActivity {
 
     private void setNavState(LinearLayout container, int labelId, boolean selected) {
         if (container == null) return;
-
         container.setBackgroundResource(selected ? R.drawable.btn_orange : R.drawable.nav_item_default);
-
         TextView label = container.findViewById(labelId);
         if (label != null) {
-            label.setTextColor(0xFFFF); // branco
-            label.setTypeface(label.getTypeface(), selected ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
+            label.setTypeface(label.getTypeface(),
+                    selected ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
         }
     }
 }

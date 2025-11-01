@@ -118,17 +118,6 @@
                     android:layout_marginStart="6dp" />
             </LinearLayout>
 
-            <!-- Link Forgot Password -->
-            <TextView
-                android:id="@+id/txtForgot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:fontFamily="maven_pro"
-                android:text="@string/forgot_password"
-                android:textColor="#F97316"
-                android:textSize="14sp" />
-
             <!-- Linha: Don't have an account? Sign up -->
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -141,6 +130,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_account"
                     android:textColor="#D1D5DB"
+                    android:layout_marginEnd="8dp"
                     android:fontFamily="maven_pro"
                     android:textSize="14sp" />
 

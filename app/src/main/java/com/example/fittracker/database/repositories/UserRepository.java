@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.fittracker.database.AppDatabase;
 import com.example.fittracker.database.daos.UserDAO;
 import com.example.fittracker.database.entities.User;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -43,24 +44,35 @@ public class UserRepository {
         return userDao.getById(id);
     }
 
-    // FIREBASE
+    public User getByFirebaseUid(String uid) {
+        return userDao.getByFirebaseUid(uid);
+    }
+
+    // FIREBASE upload - envia Date (Timestamp nativo)
     public void uploadUserToFirebase(User user) {
         if (user == null || user.getFirebaseUid() == null) return;
 
         Map<String, Object> data = new HashMap<>();
         data.put("name", user.getName());
-        data.put("email", user.getEmail()); // opcional
+        data.put("email", user.getEmail());
         data.put("gender", user.getGender());
-        data.put("birthday", user.getBirthday() != null ? user.getBirthday().getTime() : null);
+        // Guardar como Date para Firestore gravar como Timestamp
+        data.put("birthday", user.getBirthday() != null ? user.getBirthday() : null);
         data.put("weight", user.getWeight());
         data.put("height", user.getHeight());
-        data.put("updatedAt", System.currentTimeMillis());
+        data.put("updatedAt", new Date());
+
+        // Opcional: se o doc ainda não tem createdAt, mantém se já existir
+        if (user.getCreatedAt() != null) {
+            data.put("createdAt", user.getCreatedAt());
+        }
 
         firestore.collection("users")
-                .document(user.getFirebaseUid()) // id = UID
-                .set(data, SetOptions.merge());  // merge para não perder campos
+                .document(user.getFirebaseUid())
+                .set(data, SetOptions.merge());
     }
 
+    // FIREBASE -> Room sync One-shot
     public void syncUserFromFirebase(String firebaseUid) {
         if (firebaseUid == null) return;
 
@@ -75,8 +87,15 @@ public class UserRepository {
                         user.setEmail(doc.getString("email"));
                         user.setGender(doc.getString("gender"));
 
-                        Long birthdayMs = doc.getLong("birthday");
-                        if (birthdayMs != null) user.setBirthday(new Date(birthdayMs));
+                        // birthday pode estar como Timestamp (novo) ou Long (antigo)
+                        Date birthday = null;
+                        Object b = doc.get("birthday");
+                        if (b instanceof Timestamp) {
+                            birthday = ((Timestamp) b).toDate();
+                        } else if (b instanceof Long) {
+                            birthday = new Date((Long) b);
+                        }
+                        user.setBirthday(birthday);
 
                         Double weight = doc.getDouble("weight");
                         if (weight != null) user.setWeight(weight);
@@ -87,21 +106,68 @@ public class UserRepository {
                         user.setSynced(true);
 
                         executor.execute(() -> {
-                            // Preferência: conciliar por email quando existir, senão inserir
-                            if (user.getEmail() != null) {
-                                User existing = userDao.getUserByEmail(user.getEmail());
-                                if (existing != null) {
-                                    user.setId(existing.getId());
-                                    userDao.update(user);
-                                } else {
-                                    userDao.insert(user);
-                                }
+                            User existing = userDao.getByFirebaseUid(firebaseUid);
+                            if (existing != null) {
+                                user.setId(existing.getId());
+                                userDao.update(user);
                             } else {
-                                // Sem email, tenta inserir
                                 userDao.insert(user);
                             }
                         });
                     }
                 });
+    }
+
+    // Callback para fetch direto
+    public interface UserLoadCallback {
+        void onLoaded(User user);
+        void onError(Exception e);
+    }
+
+    // Ler diretamente do Firestore e persistir em Room
+    public void fetchUserFromFirestore(String firebaseUid, UserLoadCallback cb) {
+        if (firebaseUid == null) { if (cb != null) cb.onLoaded(null); return; }
+        firestore.collection("users")
+                .document(firebaseUid)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (!doc.exists()) { if (cb != null) cb.onLoaded(null); return; }
+
+                    User user = new User();
+                    user.setFirebaseUid(firebaseUid);
+                    user.setName(doc.getString("name"));
+                    user.setEmail(doc.getString("email"));
+                    user.setGender(doc.getString("gender"));
+
+                    // birthday como Timestamp (preferencial) ou Long (retrocompatibilidade)
+                    Date birthday = null;
+                    Object b = doc.get("birthday");
+                    if (b instanceof Timestamp) {
+                        birthday = ((Timestamp) b).toDate();
+                    } else if (b instanceof Long) {
+                        birthday = new Date((Long) b);
+                    }
+                    user.setBirthday(birthday);
+
+                    Double weight = doc.getDouble("weight");
+                    if (weight != null) user.setWeight(weight);
+
+                    Double height = doc.getDouble("height");
+                    if (height != null) user.setHeight(height);
+
+                    if (cb != null) cb.onLoaded(user);
+
+                    // Persistir localmente
+                    executor.execute(() -> {
+                        User existing = userDao.getByFirebaseUid(firebaseUid);
+                        if (existing != null) {
+                            user.setId(existing.getId());
+                            userDao.update(user);
+                        } else {
+                            userDao.insert(user);
+                        }
+                    });
+                })
+                .addOnFailureListener(e -> { if (cb != null) cb.onError(e); });
     }
 }

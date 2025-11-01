@@ -15,7 +15,7 @@
             android:id="@+id/scrollRoot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#000000"
+            android:background="#0000"
             android:fillViewport="true"
             android:padding="20dp">
 
@@ -45,7 +45,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Perfil"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#FFFF"
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:fontFamily="maven_pro" />
@@ -73,16 +73,20 @@
                             android:background="@drawable/profile_circle" />
                     </FrameLayout>
 
+                    <!-- Nome (dinâmico) -->
                     <TextView
+                        android:id="@+id/tvHeaderName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="João Silva"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#FFFF"
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:fontFamily="maven_pro" />
 
+                    <!-- Email (dinâmico) -->
                     <TextView
+                        android:id="@+id/tvHeaderEmail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="joao.silva@email.com"
@@ -91,7 +95,7 @@
                         android:fontFamily="maven_pro" />
                 </LinearLayout>
 
-                <!-- Secção: Dados Pessoais (removi marginTop negativa) -->
+                <!-- Secção: Dados Pessoais -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -110,30 +114,18 @@
                         android:gravity="center_vertical"
                         android:layout_marginBottom="8dp">
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginEnd="8dp"
-                            android:src="@drawable/ic_user" />
-
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Dados Pessoais"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#FFFF"
                             android:textStyle="bold"
                             android:textSize="16sp"
                             android:fontFamily="maven_pro" />
-
-                        <ImageView
-                            android:id="@+id/btnEditData"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_edit" />
                     </LinearLayout>
 
-                    <!-- Conteúdo -->
+                    <!-- Nome -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -150,14 +142,16 @@
                             android:fontFamily="maven_pro" />
 
                         <TextView
+                            android:id="@+id/tvName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="João Silva"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#FFFF"
                             android:textSize="14sp"
                             android:fontFamily="maven_pro" />
                     </LinearLayout>
 
+                    <!-- Email -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -174,14 +168,16 @@
                             android:fontFamily="maven_pro" />
 
                         <TextView
+                            android:id="@+id/tvEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="joao.silva@email.com"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#FFFF"
                             android:textSize="14sp"
                             android:fontFamily="maven_pro" />
                     </LinearLayout>
 
+                    <!-- Sexo -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -198,14 +194,16 @@
                             android:fontFamily="maven_pro" />
 
                         <TextView
+                            android:id="@+id/tvGender"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Masculino"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#FFFF"
                             android:textSize="14sp"
                             android:fontFamily="maven_pro" />
                     </LinearLayout>
 
+                    <!-- Idade -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -221,13 +219,15 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tvAge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="28 anos"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#FFFF"
                             android:textSize="14sp" />
                     </LinearLayout>
 
+                    <!-- Peso -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -243,13 +243,15 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tvWeight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="75 kg"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#FFFF"
                             android:textSize="14sp" />
                     </LinearLayout>
 
+                    <!-- Altura -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -264,10 +266,11 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tvHeight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="178 cm"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#FFFF"
                             android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -282,16 +285,7 @@
                     android:fontFamily="maven_pro"
                     android:text="Alterar Password"
                     android:textAllCaps="false"
-                    android:textColor="#FFFFFF" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:text="Guardar Alterações"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:background="@drawable/btn_orange"
-                    android:fontFamily="maven_pro" />
+                    android:textColor="#FFFF" />
             </LinearLayout>
         </ScrollView>
 
@@ -300,7 +294,6 @@
             android:id="@+id/dimOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#80000000"
             android:visibility="gone" />
     </FrameLayout>
 
@@ -314,7 +307,7 @@
         android:background="#0F1622"
         android:padding="16dp">
 
-        <!-- Cabeçalho -->
+        <!-- Cabeçalho do Drawer -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="140dp"
@@ -330,15 +323,17 @@
                 android:layout_marginBottom="8dp" />
 
             <TextView
+                android:id="@+id/tvDrawerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="João Silva"
-                android:textColor="#FFFFFF"
+                android:textColor="#FFFF"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:fontFamily="maven_pro" />
 
             <TextView
+                android:id="@+id/tvDrawerEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="joao.silva@email.com"
@@ -375,7 +370,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Dashboard"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#FFFF"
                     android:textStyle="bold"
                     android:fontFamily="maven_pro" />
             </LinearLayout>
@@ -401,7 +396,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Treinos"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#FFFF"
                     android:fontFamily="maven_pro" />
             </LinearLayout>
 
@@ -426,7 +421,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Perfil"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#FFFF"
                     android:fontFamily="maven_pro" />
             </LinearLayout>
 

@@ -26,12 +26,14 @@ import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText inputFullName, inputEmail, inputPassword, inputIdade, inputPeso, inputAltura;
+    private EditText inputFullName, inputEmail, inputPassword, inputBirthday, inputPeso, inputAltura;
     private Spinner spinnerSexo;
 
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
     private UserRepository userRepository;
+
+    private Calendar selectedDob;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,102 +47,92 @@ public class SignUpActivity extends AppCompatActivity {
         inputFullName = findViewById(R.id.inputFullName);
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
-        inputIdade = findViewById(R.id.inputIdade);
+        inputBirthday = findViewById(R.id.inputBirthday);
         inputPeso = findViewById(R.id.inputPeso);
         inputAltura = findViewById(R.id.inputAltura);
         spinnerSexo = findViewById(R.id.spinnerSexo);
 
-        // Configurar Spinner de género
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
                 new String[]{"Masculino", "Feminino", "Outro"});
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSexo.setAdapter(adapter);
 
-        // Voltar para o login
+        inputBirthday.setOnClickListener(v -> showBirthdayPicker());
+
         findViewById(R.id.txtEnter).setOnClickListener(v -> {
             Intent i = new Intent(this, LogInActivity.class);
             startActivity(i);
             finish();
         });
 
-        // Criar conta
         findViewById(R.id.btnSignUp).setOnClickListener(v -> trySignUp());
+    }
+
+    private void showBirthdayPicker() {
+        final Calendar cal = selectedDob != null ? (Calendar) selectedDob.clone() : Calendar.getInstance();
+        int y = cal.get(Calendar.YEAR);
+        int m = cal.get(Calendar.MONTH);
+        int d = cal.get(Calendar.DAY_OF_MONTH);
+
+        new android.app.DatePickerDialog(
+                this,
+                (view, year, month, dayOfMonth) -> {
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.YEAR, year);
+                    c.set(Calendar.MONTH, month);
+                    c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    c.set(Calendar.HOUR_OF_DAY, 0);
+                    c.set(Calendar.MINUTE, 0);
+                    c.set(Calendar.SECOND, 0);
+                    c.set(Calendar.MILLISECOND, 0);
+                    selectedDob = c;
+                    inputBirthday.setText(String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year));
+                },
+                y, m, d
+        ).show();
     }
 
     private void trySignUp() {
         String name = inputFullName.getText().toString().trim();
         String email = inputEmail.getText().toString().trim();
         String password = inputPassword.getText().toString().trim();
-        String idadeStr = inputIdade.getText().toString().trim();
         String gender = spinnerSexo.getSelectedItem().toString();
         String pesoStr = inputPeso.getText().toString().trim();
         String alturaStr = inputAltura.getText().toString().trim();
 
-        // 1️⃣ Validação de campos obrigatórios
         if (TextUtils.isEmpty(name)) {
             inputFullName.setError("Nome obrigatório");
             inputFullName.requestFocus();
             return;
         }
-
         if (TextUtils.isEmpty(email)) {
             inputEmail.setError("Email obrigatório");
             inputEmail.requestFocus();
             return;
         }
-
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             inputEmail.setError("Email inválido");
             inputEmail.requestFocus();
             return;
         }
-
         if (TextUtils.isEmpty(password)) {
             inputPassword.setError("Password obrigatória");
             inputPassword.requestFocus();
             return;
         }
-
         if (password.length() < 6) {
             inputPassword.setError("A password deve ter pelo menos 6 caracteres");
             inputPassword.requestFocus();
             return;
         }
-
-        if (TextUtils.isEmpty(idadeStr)) {
-            inputIdade.setError("Idade obrigatória");
-            inputIdade.requestFocus();
+        if (selectedDob == null) {
+            inputBirthday.setError("Data de nascimento obrigatória");
+            inputBirthday.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(pesoStr)) {
-            inputPeso.setError("Peso obrigatório");
-            inputPeso.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(alturaStr)) {
-            inputAltura.setError("Altura obrigatória");
-            inputAltura.requestFocus();
-            return;
-        }
-
-        int idade;
         double altura, peso;
-        try {
-            idade = Integer.parseInt(idadeStr);
-            if (idade <= 0 || idade > 120) {
-                inputIdade.setError("Idade inválida");
-                inputIdade.requestFocus();
-                return;
-            }
-        } catch (NumberFormatException e) {
-            inputIdade.setError("Idade inválida");
-            inputIdade.requestFocus();
-            return;
-        }
-
         try {
             altura = Double.parseDouble(alturaStr);
             if (altura <= 0 || altura > 300) {
@@ -167,7 +159,6 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        // 2️⃣ Criar conta no Firebase Authentication
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(task -> {
                     FirebaseUser fbUser = auth.getCurrentUser();
@@ -177,13 +168,8 @@ public class SignUpActivity extends AppCompatActivity {
                     }
 
                     String uid = fbUser.getUid();
+                    Date birthday = selectedDob.getTime();
 
-                    // 3️⃣ Calcular data de nascimento aproximada a partir da idade
-                    Calendar c = Calendar.getInstance();
-                    c.add(Calendar.YEAR, -idade);
-                    Date birthday = c.getTime();
-
-                    // 4️⃣ Criar objeto User para Room
                     User user = new User();
                     user.setFirebaseUid(uid);
                     user.setName(name);
@@ -195,29 +181,22 @@ public class SignUpActivity extends AppCompatActivity {
                     user.setCreatedAt(new Date());
                     user.setSynced(true);
 
-                    // 5️⃣ Guardar no Firestore (users/{uid})
                     Map<String, Object> data = new HashMap<>();
                     data.put("name", name);
                     data.put("email", email);
                     data.put("gender", gender);
-                    data.put("birthday", birthday.getTime());
+                    data.put("birthday", birthday); // <<< agora Date, não long
                     data.put("height", altura);
                     data.put("weight", peso);
-                    data.put("createdAt", System.currentTimeMillis());
+                    data.put("createdAt", new Date()); // também podes guardar como Date
 
                     firestore.collection("users")
-                            .document(uid) // ID do documento = UID do Authentication
+                            .document(uid)
                             .set(data, SetOptions.merge())
                             .addOnSuccessListener(unused -> {
-                                // 6️⃣ Guardar localmente em Room
                                 new Thread(() -> userRepository.insertLocal(user)).start();
-
-                                // 7️⃣ Ativar Remember Me automaticamente
                                 Prefs.setRememberMe(getApplicationContext(), true);
-
                                 Toast.makeText(this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
-
-                                // 8️⃣ Navegar para Dashboard
                                 Intent intent = new Intent(this, DashboardActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
