@@ -9,8 +9,10 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,7 +50,12 @@ public class UserRepository {
         return userDao.getByFirebaseUid(uid);
     }
 
-    // FIREBASE upload - envia Date (Timestamp nativo)
+    // NOVO: obter "utilizador atual" (aqui: primeiro utilizador guardado em Room)
+    public User getFirstUser() {
+        return userDao.getFirstUser();
+    }
+
+    // FIREBASE upload
     public void uploadUserToFirebase(User user) {
         if (user == null || user.getFirebaseUid() == null) return;
 
@@ -56,16 +63,10 @@ public class UserRepository {
         data.put("name", user.getName());
         data.put("email", user.getEmail());
         data.put("gender", user.getGender());
-        // Guardar como Date para Firestore gravar como Timestamp
-        data.put("birthday", user.getBirthday() != null ? user.getBirthday() : null);
+        data.put("birthday", user.getBirthday() != null ? user.getBirthday().getTime() : null);
         data.put("weight", user.getWeight());
         data.put("height", user.getHeight());
-        data.put("updatedAt", new Date());
-
-        // Opcional: se o doc ainda não tem createdAt, mantém se já existir
-        if (user.getCreatedAt() != null) {
-            data.put("createdAt", user.getCreatedAt());
-        }
+        data.put("updatedAt", System.currentTimeMillis());
 
         firestore.collection("users")
                 .document(user.getFirebaseUid())
@@ -87,15 +88,15 @@ public class UserRepository {
                         user.setEmail(doc.getString("email"));
                         user.setGender(doc.getString("gender"));
 
-                        // birthday pode estar como Timestamp (novo) ou Long (antigo)
-                        Date birthday = null;
-                        Object b = doc.get("birthday");
-                        if (b instanceof Timestamp) {
-                            birthday = ((Timestamp) b).toDate();
-                        } else if (b instanceof Long) {
-                            birthday = new Date((Long) b);
+                        // Lidar com birthday como Timestamp
+                        try {
+                            com.google.firebase.Timestamp birthdayTs = doc.getTimestamp("birthday");
+                            if (birthdayTs != null) {
+                                user.setBirthday(birthdayTs.toDate());
+                            }
+                        } catch (Exception e) {
+                            android.util.Log.e("UserRepository", "Erro ao processar birthday", e);
                         }
-                        user.setBirthday(birthday);
 
                         Double weight = doc.getDouble("weight");
                         if (weight != null) user.setWeight(weight);
@@ -139,19 +140,17 @@ public class UserRepository {
                     user.setEmail(doc.getString("email"));
                     user.setGender(doc.getString("gender"));
 
-                    // birthday como Timestamp (preferencial) ou Long (retrocompatibilidade)
-                    Date birthday = null;
-                    Object b = doc.get("birthday");
-                    if (b instanceof Timestamp) {
-                        birthday = ((Timestamp) b).toDate();
-                    } else if (b instanceof Long) {
-                        birthday = new Date((Long) b);
+                    // Lidar com birthday como Timestamp
+                    try {
+                        com.google.firebase.Timestamp birthdayTs = doc.getTimestamp("birthday");
+                        if (birthdayTs != null) {
+                            user.setBirthday(birthdayTs.toDate());
+                        }
+                    } catch (Exception e) {
+                        android.util.Log.e("UserRepository", "Erro ao processar birthday", e);
                     }
-                    user.setBirthday(birthday);
-
                     Double weight = doc.getDouble("weight");
                     if (weight != null) user.setWeight(weight);
-
                     Double height = doc.getDouble("height");
                     if (height != null) user.setHeight(height);
 

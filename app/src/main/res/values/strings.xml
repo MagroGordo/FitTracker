@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Fitness Tracker Lite</string>
+    <string name="app_name">Fit Tracker</string>
 
     <!-- Log In -->
     <string name="login_title">Welcome</string>

@@ -38,15 +38,14 @@ public class WorkoutRepository {
         return workoutDao.getLastWorkout(userId);
     }
 
-    // FIREBASE
-    // Upload com owner firebaseUid
+    // FIREBASE (opcional)
     public void uploadToFirebase(Workout workout, String firebaseUid) {
         if (workout == null || firebaseUid == null) return;
         String docId = workout.getFirebaseId() != null ? workout.getFirebaseId() : String.valueOf(workout.getId());
 
         Map<String, Object> data = new HashMap<>();
         data.put("firebaseUid", firebaseUid);
-        data.put("userId", workout.getUserId()); // opcional
+        data.put("userId", workout.getUserId());
         data.put("type", workout.getType());
         data.put("distance", workout.getDistance());
         data.put("duration", workout.getDuration());
@@ -66,7 +65,6 @@ public class WorkoutRepository {
                 .set(data);
     }
 
-    // Sync por firebaseUid
     public void syncFromFirebase(String firebaseUid) {
         if (firebaseUid == null) return;
         firestore.collection("workouts")

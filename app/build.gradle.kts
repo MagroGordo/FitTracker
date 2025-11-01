@@ -34,6 +34,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.play.services.location)
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)
     implementation(libs.appcompat)

@@ -16,7 +16,7 @@
         android:id="@+id/scrollRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000"
+        android:background="#0000"
         android:padding="35dp"
         android:clipToPadding="false"
         android:fillViewport="true">
@@ -47,18 +47,20 @@
               android:layout_marginStart="12dp">
 
             <TextView
+                android:id="@+id/tvHeaderName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Olá, João"
-                android:textColor="#FFFFFF"
+                android:text="Utilizador"
+                android:textColor="#FFFF"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:fontFamily="maven_pro" />
 
             <TextView
+                android:id="@+id/tvHeaderEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Escolha a sua atividade"
+                android:text="email@exemplo.com"
                 android:textColor="#D1D5DB"
                 android:textSize="14sp"
                 android:fontFamily="maven_pro" />
@@ -76,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Iniciar Treino"
-            android:textColor="#FFFFFF"
+            android:textColor="#FFFF"
             android:textSize="20sp"
             android:textStyle="bold"
             android:fontFamily="maven_pro"
@@ -119,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Corrida"
-                android:textColor="#FFFFFF"
+                android:textColor="#FFFF"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:fontFamily="maven_pro" />
@@ -168,7 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ciclismo"
-                android:textColor="#FFFFFF"
+                android:textColor="#FFFF"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:fontFamily="maven_pro" />
@@ -197,7 +199,7 @@
             android:layout_height="56dp"
             android:text="Começar Agora"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="#FFFF"
             android:fontFamily="maven_pro"
             android:background="@drawable/btn_orange"
             app:backgroundTint="@null"
@@ -210,7 +212,6 @@
         android:id="@+id/dimOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80000000"
         android:visibility="gone" />
   </FrameLayout>
 
@@ -240,18 +241,20 @@
           android:layout_marginBottom="8dp" />
 
       <TextView
+          android:id="@+id/tvDrawerName"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="João Silva"
-          android:textColor="#FFFFFF"
+          android:text="Utilizador"
+          android:textColor="#FFFF"
           android:textStyle="bold"
           android:textSize="16sp"
           android:fontFamily="maven_pro" />
 
       <TextView
+          android:id="@+id/tvDrawerEmail"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="joao.silva@email.com"
+          android:text="email@exemplo.com"
           android:textColor="#F3F4F6"
           android:textSize="13sp"
           android:fontFamily="maven_pro" />
@@ -286,7 +289,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Dashboard"
-            android:textColor="#FFFFFF"
+            android:textColor="#FFFF"
             android:textStyle="bold"
             android:fontFamily="maven_pro" />
       </LinearLayout>
@@ -313,7 +316,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Treinos"
-            android:textColor="#FFFFFF"
+            android:textColor="#FFFF"
             android:fontFamily="maven_pro" />
       </LinearLayout>
 
@@ -339,7 +342,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Perfil"
-            android:textColor="#FFFFFF"
+            android:textColor="#FFFF"
             android:fontFamily="maven_pro" />
       </LinearLayout>
 

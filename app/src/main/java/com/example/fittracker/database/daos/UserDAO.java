@@ -45,4 +45,7 @@ public interface UserDAO {
     // Atualizar apenas peso, altura ou data de nascimento
     @Query("UPDATE users SET weight = :weight, height = :height, birthday = :birthday WHERE id = :id")
     int updatePhysicalData(long id, double weight, double height, java.util.Date birthday);
+
+    @Query("SELECT * FROM users LIMIT 1")
+    User getFirstUser();
 }
