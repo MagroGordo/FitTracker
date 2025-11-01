@@ -10,9 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.fittracker.R;
+import com.example.fittracker.core.Prefs;
+import com.google.firebase.auth.FirebaseAuth;
+import android.widget.Toast;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -37,7 +41,7 @@ public class DashboardActivity extends AppCompatActivity {
         dimOverlay = findViewById(R.id.dimOverlay);
 
         if (btnMenu != null) {
-            btnMenu.setOnClickListener(v -> drawerLayout.openDrawer(Gravity.START));
+            btnMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
         }
 
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -70,7 +74,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         if (dimOverlay != null) {
-            dimOverlay.setOnClickListener(v -> drawerLayout.closeDrawer(Gravity.START));
+            dimOverlay.setOnClickListener(v -> drawerLayout.closeDrawer(GravityCompat.START));
         }
 
         // Botão principal
@@ -89,12 +93,12 @@ public class DashboardActivity extends AppCompatActivity {
         navLogout = findViewById(R.id.navLogout);
 
         if (navDashboard != null) {
-            navDashboard.setOnClickListener(v -> drawerLayout.closeDrawer(Gravity.START));
+            navDashboard.setOnClickListener(v -> drawerLayout.closeDrawer(GravityCompat.START));
         }
 
         if (navTreinos != null) {
             navTreinos.setOnClickListener(v -> {
-                drawerLayout.closeDrawer(Gravity.START);
+                drawerLayout.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(DashboardActivity.this, StartTrainingActivity.class);
                 startActivity(intent);
             });
@@ -102,7 +106,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         if (navPerfil != null) {
             navPerfil.setOnClickListener(v -> {
-                drawerLayout.closeDrawer(Gravity.START);
+                drawerLayout.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(DashboardActivity.this, ProfileActivity.class);
                 startActivity(intent);
             });
@@ -110,12 +114,8 @@ public class DashboardActivity extends AppCompatActivity {
 
         if (navLogout != null) {
             navLogout.setOnClickListener(v -> {
-                drawerLayout.closeDrawer(Gravity.START);
-                // Se houver autenticação, fazer signOut aqui.
-                Intent intent = new Intent(DashboardActivity.this, LogInActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+                drawerLayout.closeDrawer(GravityCompat.START);
+                performLogout();
             });
         }
 
@@ -131,6 +131,23 @@ public class DashboardActivity extends AppCompatActivity {
         setNavState(navLogout, R.id.navLogoutLabel, false);
     }
 
+    private void performLogout() {
+        // 1. Fazer logout do Firebase
+        FirebaseAuth.getInstance().signOut();
+
+        // 2. Limpar Remember Me
+        Prefs.setRememberMe(getApplicationContext(), false);
+
+        // 3. Mostrar mensagem
+        Toast.makeText(this, "Sessão terminada", Toast.LENGTH_SHORT).show();
+
+        // 4. Ir para o login
+        Intent intent = new Intent(DashboardActivity.this, LogInActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
     private void setNavState(LinearLayout container, int labelId, boolean selected) {
         if (container == null) return;
 
@@ -138,7 +155,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         TextView label = container.findViewById(labelId);
         if (label != null) {
-            label.setTextColor(0xFFFFFFFF); // branco
+            label.setTextColor(0xFFFF); // branco
             label.setTypeface(label.getTypeface(), selected ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
         }
     }

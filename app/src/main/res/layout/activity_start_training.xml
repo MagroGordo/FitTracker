@@ -192,7 +192,7 @@
 
         <!-- Botão principal -->
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnComecarAgora"
+            android:id="@+id/btnStart"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:text="Começar Agora"

@@ -44,21 +44,6 @@
                 android:textSize="14sp"
                 android:layout_marginBottom="24dp" />
 
-            <!-- Ícone da câmara -->
-            <LinearLayout
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/camera_border"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/ic_camera"
-                    android:contentDescription="Camera icon" />
-            </LinearLayout>
-
             <!-- Nome completo -->
             <EditText
                 android:id="@+id/inputFullName"

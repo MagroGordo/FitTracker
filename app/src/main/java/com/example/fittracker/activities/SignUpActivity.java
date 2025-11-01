@@ -2,37 +2,234 @@ package com.example.fittracker.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.TextView;
+import android.text.TextUtils;
+import android.util.Patterns;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fittracker.R;
+import com.example.fittracker.core.Prefs;
+import com.example.fittracker.database.entities.User;
+import com.example.fittracker.database.repositories.UserRepository;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    TextView txtEntrar;
-    Button btnCreate;
+    private EditText inputFullName, inputEmail, inputPassword, inputIdade, inputPeso, inputAltura;
+    private Spinner spinnerSexo;
+
+    private FirebaseAuth auth;
+    private FirebaseFirestore firestore;
+    private UserRepository userRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        txtEntrar = findViewById(R.id.txtEnter);
-        btnCreate = findViewById(R.id.btnSignUp);
+        auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        userRepository = new UserRepository(getApplicationContext());
+
+        inputFullName = findViewById(R.id.inputFullName);
+        inputEmail = findViewById(R.id.inputEmail);
+        inputPassword = findViewById(R.id.inputPassword);
+        inputIdade = findViewById(R.id.inputIdade);
+        inputPeso = findViewById(R.id.inputPeso);
+        inputAltura = findViewById(R.id.inputAltura);
+        spinnerSexo = findViewById(R.id.spinnerSexo);
+
+        // Configurar Spinner de género
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                new String[]{"Masculino", "Feminino", "Outro"});
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSexo.setAdapter(adapter);
 
         // Voltar para o login
-        txtEntrar.setOnClickListener(v -> {
-            Intent intent = new Intent(SignUpActivity.this, LogInActivity.class);
-            startActivity(intent);
+        findViewById(R.id.txtEnter).setOnClickListener(v -> {
+            Intent i = new Intent(this, LogInActivity.class);
+            startActivity(i);
             finish();
         });
 
-        btnCreate.setOnClickListener(v -> {
-            Intent intent = new Intent(SignUpActivity.this, DashboardActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        // Criar conta
+        findViewById(R.id.btnSignUp).setOnClickListener(v -> trySignUp());
+    }
 
+    private void trySignUp() {
+        String name = inputFullName.getText().toString().trim();
+        String email = inputEmail.getText().toString().trim();
+        String password = inputPassword.getText().toString().trim();
+        String idadeStr = inputIdade.getText().toString().trim();
+        String gender = spinnerSexo.getSelectedItem().toString();
+        String pesoStr = inputPeso.getText().toString().trim();
+        String alturaStr = inputAltura.getText().toString().trim();
+
+        // 1️⃣ Validação de campos obrigatórios
+        if (TextUtils.isEmpty(name)) {
+            inputFullName.setError("Nome obrigatório");
+            inputFullName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(email)) {
+            inputEmail.setError("Email obrigatório");
+            inputEmail.requestFocus();
+            return;
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            inputEmail.setError("Email inválido");
+            inputEmail.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            inputPassword.setError("Password obrigatória");
+            inputPassword.requestFocus();
+            return;
+        }
+
+        if (password.length() < 6) {
+            inputPassword.setError("A password deve ter pelo menos 6 caracteres");
+            inputPassword.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(idadeStr)) {
+            inputIdade.setError("Idade obrigatória");
+            inputIdade.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(pesoStr)) {
+            inputPeso.setError("Peso obrigatório");
+            inputPeso.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(alturaStr)) {
+            inputAltura.setError("Altura obrigatória");
+            inputAltura.requestFocus();
+            return;
+        }
+
+        int idade;
+        double altura, peso;
+        try {
+            idade = Integer.parseInt(idadeStr);
+            if (idade <= 0 || idade > 120) {
+                inputIdade.setError("Idade inválida");
+                inputIdade.requestFocus();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            inputIdade.setError("Idade inválida");
+            inputIdade.requestFocus();
+            return;
+        }
+
+        try {
+            altura = Double.parseDouble(alturaStr);
+            if (altura <= 0 || altura > 300) {
+                inputAltura.setError("Altura inválida");
+                inputAltura.requestFocus();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            inputAltura.setError("Altura inválida");
+            inputAltura.requestFocus();
+            return;
+        }
+
+        try {
+            peso = Double.parseDouble(pesoStr);
+            if (peso <= 0 || peso > 500) {
+                inputPeso.setError("Peso inválido");
+                inputPeso.requestFocus();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            inputPeso.setError("Peso inválido");
+            inputPeso.requestFocus();
+            return;
+        }
+
+        // 2️⃣ Criar conta no Firebase Authentication
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(task -> {
+                    FirebaseUser fbUser = auth.getCurrentUser();
+                    if (fbUser == null) {
+                        Toast.makeText(this, "Erro interno ao criar conta.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    String uid = fbUser.getUid();
+
+                    // 3️⃣ Calcular data de nascimento aproximada a partir da idade
+                    Calendar c = Calendar.getInstance();
+                    c.add(Calendar.YEAR, -idade);
+                    Date birthday = c.getTime();
+
+                    // 4️⃣ Criar objeto User para Room
+                    User user = new User();
+                    user.setFirebaseUid(uid);
+                    user.setName(name);
+                    user.setEmail(email);
+                    user.setGender(gender);
+                    user.setBirthday(birthday);
+                    user.setHeight(altura);
+                    user.setWeight(peso);
+                    user.setCreatedAt(new Date());
+                    user.setSynced(true);
+
+                    // 5️⃣ Guardar no Firestore (users/{uid})
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("name", name);
+                    data.put("email", email);
+                    data.put("gender", gender);
+                    data.put("birthday", birthday.getTime());
+                    data.put("height", altura);
+                    data.put("weight", peso);
+                    data.put("createdAt", System.currentTimeMillis());
+
+                    firestore.collection("users")
+                            .document(uid) // ID do documento = UID do Authentication
+                            .set(data, SetOptions.merge())
+                            .addOnSuccessListener(unused -> {
+                                // 6️⃣ Guardar localmente em Room
+                                new Thread(() -> userRepository.insertLocal(user)).start();
+
+                                // 7️⃣ Ativar Remember Me automaticamente
+                                Prefs.setRememberMe(getApplicationContext(), true);
+
+                                Toast.makeText(this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
+
+                                // 8️⃣ Navegar para Dashboard
+                                Intent intent = new Intent(this, DashboardActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            })
+                            .addOnFailureListener(err -> {
+                                Toast.makeText(this, "Erro ao guardar perfil: " + err.getMessage(),
+                                        Toast.LENGTH_LONG).show();
+                            });
+                })
+                .addOnFailureListener(err -> {
+                    Toast.makeText(this, "Erro ao criar conta: " + err.getMessage(), Toast.LENGTH_LONG).show();
+                });
     }
 }
