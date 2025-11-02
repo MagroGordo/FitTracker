@@ -50,8 +50,8 @@
                 android:id="@+id/tvHeaderName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Utilizador"
-                android:textColor="#FFFF"
+                android:text="@string/user_placeholder"
+                android:textColor="@color/muted_foreground"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:fontFamily="maven_pro" />
@@ -60,8 +60,8 @@
                 android:id="@+id/tvHeaderEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="email@exemplo.com"
-                android:textColor="#D1D5DB"
+                android:text="@string/email_placeholder"
+                android:textColor="@color/secondary_muted_foreground"
                 android:textSize="14sp"
                 android:fontFamily="maven_pro" />
           </LinearLayout>
@@ -77,8 +77,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Iniciar Treino"
-            android:textColor="#FFFF"
+            android:text="@string/start_training_title"
+            android:textColor="@color/muted_foreground"
             android:textSize="20sp"
             android:textStyle="bold"
             android:fontFamily="maven_pro"
@@ -87,8 +87,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Escolha a sua atividade"
-            android:textColor="#9CA3AF"
+            android:text="@string/training_type_hint"
+            android:textColor="@color/primary_foreground"
             android:textSize="14sp"
             android:fontFamily="maven_pro"
             android:layout_marginBottom="24dp" />
@@ -120,8 +120,8 @@
                 android:id="@+id/txtCorrida"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Corrida"
-                android:textColor="#FFFF"
+                android:text="@string/run_title"
+                android:textColor="@color/muted_foreground"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:fontFamily="maven_pro" />
@@ -129,8 +129,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Toque para selecionar"
-                android:textColor="#D1D5DB"
+                android:text="@string/select_hint"
+                android:textColor="@color/primary_foreground"
                 android:textSize="14sp"
                 android:fontFamily="maven_pro" />
           </LinearLayout>
@@ -169,8 +169,8 @@
                 android:id="@+id/txtCiclismo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ciclismo"
-                android:textColor="#FFFF"
+                android:text="@string/bicycle_title"
+                android:textColor="@color/muted_foreground"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:fontFamily="maven_pro" />
@@ -178,8 +178,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Toque para selecionar"
-                android:textColor="#D1D5DB"
+                android:text="@string/select_hint"
+                android:textColor="@color/primary_foreground"
                 android:textSize="14sp"
                 android:fontFamily="maven_pro" />
           </LinearLayout>
@@ -197,9 +197,9 @@
             android:id="@+id/btnStart"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Começar Agora"
+            android:text="@string/start_training_title"
             android:textAllCaps="false"
-            android:textColor="#FFFF"
+            android:textColor="@color/muted_foreground"
             android:fontFamily="maven_pro"
             android:background="@drawable/btn_orange"
             app:backgroundTint="@null"

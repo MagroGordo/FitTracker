@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_title"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/muted_foreground"
                 android:textStyle="bold"
                 android:fontFamily="maven_pro"
                 android:textSize="22sp"
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_subtitle"
-                android:textColor="#D1D5DB"
+                android:textColor="@color/muted_foreground"
                 android:fontFamily="maven_pro"
                 android:textSize="14sp"
                 android:layout_marginBottom="24dp" />
@@ -60,9 +60,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:hint="@string/email_hint"
-                android:background="#000000"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#9CA3AF"
+                android:background="@color/background"
+                android:textColor="@color/muted_foreground"
+                android:textColorHint="@color/secondary_muted_foreground"
                 android:paddingHorizontal="12dp"
                 android:fontFamily="maven_pro"
                 android:layout_marginBottom="12dp" />
@@ -74,9 +74,9 @@
                 android:layout_height="48dp"
                 android:hint="@string/password_hint"
                 android:inputType="textPassword"
-                android:background="#000000"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#9CA3AF"
+                android:background="@color/background"
+                android:textColor="@color/muted_foreground"
+                android:textColorHint="@color/secondary_muted_foreground"
                 android:paddingHorizontal="12dp"
                 android:fontFamily="maven_pro"
                 android:layout_marginBottom="16dp" />
@@ -88,7 +88,7 @@
                 android:layout_height="48dp"
                 android:text="@string/btn_login"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/muted_foreground"
                 android:fontFamily="maven_pro"
                 android:background="@drawable/btn_orange"
                 app:backgroundTint="@null"
@@ -106,13 +106,13 @@
                     android:id="@+id/rememberMe"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#F97316" />
+                    android:buttonTint="@color/primary_foreground" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/remember_check"
-                    android:textColor="#F97316"
+                    android:textColor="@color/primary_foreground"
                     android:fontFamily="maven_pro"
                     android:textSize="14sp"
                     android:layout_marginStart="6dp" />
@@ -129,7 +129,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/no_account"
-                    android:textColor="#D1D5DB"
+                    android:textColor="@color/secondary_muted_foreground"
                     android:layout_marginEnd="8dp"
                     android:fontFamily="maven_pro"
                     android:textSize="14sp" />
@@ -142,7 +142,7 @@
                     android:focusable="true"
                     android:fontFamily="maven_pro"
                     android:text="@string/signup_link"
-                    android:textColor="#F97316"
+                    android:textColor="@color/primary_foreground"
                     android:textSize="14sp" />
             </LinearLayout>
 

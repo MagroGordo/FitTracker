@@ -3,12 +3,12 @@
     android:shape="rectangle">
 
     <!-- Fundo castanho escuro -->
-    <solid android:color="#1A0A00" />
+    <solid android:color="@color/selected_foreground" />
 
     <!-- Borda laranja -->
     <stroke
         android:width="2dp"
-        android:color="#F97316" />
+        android:color="@color/primary_foreground" />
 
     <!-- Canto arredondado -->
     <corners android:radius="16dp" />

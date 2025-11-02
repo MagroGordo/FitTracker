@@ -195,7 +195,7 @@ public class SignUpActivity extends AppCompatActivity {
                             .set(data, SetOptions.merge())
                             .addOnSuccessListener(unused -> {
                                 new Thread(() -> userRepository.insertLocal(user)).start();
-                                Prefs.setRememberMe(getApplicationContext(), true);
+                                Prefs.setRememberMe(getApplicationContext(), false);
                                 Toast.makeText(this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(this, DashboardActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

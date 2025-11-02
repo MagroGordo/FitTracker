@@ -24,7 +24,34 @@
     <string name="account_txt">Already have an account? </string>
     <string name="login_link">Log In</string>
 
-    <!-- Recover Password -->
+    <!-- Dashboard -->
+    <string name="user_placeholder">User</string>
+    <string name="email_placeholder">example@example.com</string>
+    <string name="last_workout_title">Last Workout</string>
+    <string name="distance_title">Distance</string>
+    <string name="duration_title">Duration</string>
+    <string name="calories_title">Calories</string>
+    <string name="speed_title">Speed</string>
+    <string name="goal_title">Goal</string>
+    <string name="streak_title">Streak</string>
+    <string name="no_text">—</string>
+
+    <!-- Start Training -->
+    <string name="run_title">Run</string>
+    <string name="bicycle_title">Bicycle</string>
+    <string name="select_hint">Touch to select</string>
+    <string name="training_type_hint">Choose type of training</string>
+    <string name="start_training_title">Start Training</string>
+
+    <!-- Workout -->
+    <string name="location_title">Current Location</string>
+    <string name="latitude_title">Latitude</string>
+    <string name="longitude_title">Longitude</string>
+    <string name="distance_unit">Km</string>
+    <string name="calories_unit">Kcal</string>
+    <string name="speed_unit">Km/h</string>
+
+    <!-- Profile -->
     <string name="password_title">Password Recovery</string>
     <string name="password_subtitle">Insert and confirm new password</string>
     <string name="confirm_password_hint">Confirm Password</string>
@@ -33,8 +60,8 @@
     <string name="remembered_password_txt">Remembered your pasword? </string>
 
     <!-- Validações -->
-    <string name="error_email_empty">Email é obrigatório</string>
-    <string name="error_email_invalid">Email inválido</string>
-    <string name="error_password_empty">Password é obrigatória</string>
-    <string name="error_password_short">Password deve ter pelo menos 6 caracteres</string>
+    <string name="error_email_empty">Email is mandatory</string>
+    <string name="error_email_invalid">Invalid Email</string>
+    <string name="error_password_empty">Password is mandatory</string>
+    <string name="error_password_short">Password must be at least 6 characters long</string>
 </resources>

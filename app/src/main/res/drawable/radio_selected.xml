@@ -3,7 +3,7 @@
     <!-- Círculo laranja exterior -->
     <item>
         <shape android:shape="oval">
-            <solid android:color="#F97316" />
+            <solid android:color="@color/secondary_muted_foreground" />
         </shape>
     </item>
 
@@ -13,7 +13,7 @@
         android:height="8dp"
         android:gravity="center">
         <shape android:shape="oval">
-            <solid android:color="#FFFFFF" />
+            <solid android:color="@color/secondary_muted_foreground" />
         </shape>
     </item>
 </layer-list>

@@ -54,7 +54,6 @@ public class ProfileActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         btnMenu = findViewById(R.id.btnMenu);
         dimOverlay = findViewById(R.id.dimOverlay);
-        btnChangePassword = findViewById(R.id.btnChangePassword);
 
         // Dados - cabeçalho principal
         tvHeaderName = findViewById(R.id.tvHeaderName);
@@ -71,13 +70,6 @@ public class ProfileActivity extends AppCompatActivity {
         // Dados - cabeçalho dentro do Drawer
         tvDrawerName = findViewById(R.id.tvDrawerName);
         tvDrawerEmail = findViewById(R.id.tvDrawerEmail);
-
-        // Ações
-        if (btnChangePassword != null) {
-            btnChangePassword.setOnClickListener(v ->
-                    startActivity(new Intent(this, ChangePasswordActivity.class))
-            );
-        }
 
         if (btnMenu != null) btnMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 

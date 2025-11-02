@@ -17,7 +17,7 @@
             android:id="@+id/scrollRoot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#0000"
+            android:background="@color/transparent"
             android:fillViewport="true">
 
             <LinearLayout
@@ -50,8 +50,8 @@
                             android:id="@+id/tvHeaderName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Utilizador"
-                            android:textColor="#FFFF"
+                            android:text="@string/user_placeholder"
+                            android:textColor="@color/muted_foreground"
                             android:textStyle="bold"
                             android:textSize="16sp" />
 
@@ -59,7 +59,7 @@
                             android:id="@+id/tvHeaderEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="email@exemplo.com"
+                            android:text="@string/email_placeholder"
                             android:textColor="#D1D5DB"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -83,7 +83,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Último Treino"
+                        android:text="@string/last_workout_title"
                         android:textColor="#FFFF"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -93,8 +93,8 @@
                         android:id="@+id/tvUltTreinoTipo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="—"
-                        android:textColor="#F97316"
+                        android:text="@string/no_text"
+                        android:textColor="@color/primary_foreground"
                         android:textStyle="bold"
                         android:layout_marginBottom="2dp" />
 
@@ -102,8 +102,8 @@
                         android:id="@+id/tvUltTreinoQuando"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="—"
-                        android:textColor="#9CA3AF"
+                        android:text="@string/no_text"
+                        android:textColor="@color/secondary_muted_foreground"
                         android:textSize="14sp"
                         android:layout_marginBottom="16dp" />
 
@@ -120,23 +120,23 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:background="#111827"
+                            android:background="@color/secondary_foreground"
                             android:padding="12dp"
                             android:layout_marginEnd="8dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Distância"
-                                android:textColor="#9CA3AF"
+                                android:text="@string/distance_title"
+                                android:textColor="@color/secondary_muted_foreground"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvUltTreinoDist"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="—"
-                                android:textColor="#FFFF"
+                                android:text="@string/no_text"
+                                android:textColor="@color/muted_foreground"
                                 android:textStyle="bold"
                                 android:textSize="18sp" />
                         </LinearLayout>
@@ -147,23 +147,23 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:background="#111827"
+                            android:background="@color/secondary_foreground"
                             android:padding="12dp"
                             android:layout_marginStart="8dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Tempo"
-                                android:textColor="#9CA3AF"
+                                android:text="@string/duration_title"
+                                android:textColor="@color/secondary_muted_foreground"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvUltTreinoTempo"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="—"
-                                android:textColor="#FFFF"
+                                android:text="@string/no_text"
+                                android:textColor="@color/muted_foreground"
                                 android:textStyle="bold"
                                 android:textSize="18sp" />
                         </LinearLayout>
@@ -181,23 +181,23 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:background="#111827"
+                            android:background="@color/secondary_foreground"
                             android:padding="12dp"
                             android:layout_marginEnd="8dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Calorias"
-                                android:textColor="#9CA3AF"
+                                android:text="@string/calories_title"
+                                android:textColor="@color/secondary_muted_foreground"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvUltTreinoKcal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="—"
-                                android:textColor="#FFFF"
+                                android:text="@string/no_text"
+                                android:textColor="@color/muted_foreground"
                                 android:textStyle="bold"
                                 android:textSize="18sp" />
                         </LinearLayout>
@@ -208,23 +208,23 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:background="#111827"
+                            android:background="@color/secondary_foreground"
                             android:padding="12dp"
                             android:layout_marginStart="8dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Vel. Média"
-                                android:textColor="#9CA3AF"
+                                android:text="@string/speed_title"
+                                android:textColor="@color/secondary_muted_foreground"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvUltTreinoVel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="—"
-                                android:textColor="#FFFF"
+                                android:text="@string/no_text"
+                                android:textColor="@color/muted_foreground"
                                 android:textStyle="bold"
                                 android:textSize="18sp" />
                         </LinearLayout>
@@ -244,7 +244,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:background="#111827"
+                        android:background="@color/secondary_foreground"
                         android:gravity="center"
                         android:padding="12dp"
                         android:layout_margin="4dp">
@@ -252,15 +252,15 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Objetivo"
-                            android:textColor="#9CA3AF"
+                            android:text="@string/goal_title"
+                            android:textColor="@color/secondary_muted_foreground"
                             android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="75%"
-                            android:textColor="#F97316"
+                            android:text="@string/no_text"
+                            android:textColor="@color/primary_foreground"
                             android:textStyle="bold"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -270,7 +270,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:background="#111827"
+                        android:background="@color/secondary_foreground"
                         android:gravity="center"
                         android:padding="12dp"
                         android:layout_margin="4dp">
@@ -278,15 +278,15 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Sequência"
-                            android:textColor="#9CA3AF"
+                            android:text="@string/streak_title"
+                            android:textColor="@color/secondary_muted_foreground"
                             android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="7 dias"
-                            android:textColor="#FFFF"
+                            android:text="@string/no_text"
+                            android:textColor="@color/muted_foreground"
                             android:textStyle="bold"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -297,9 +297,9 @@
                     android:id="@+id/btnIniciarTreino"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Iniciar Novo Treino"
+                    android:text="@string/start_training_title"
                     android:textAllCaps="false"
-                    android:textColor="#FFFF"
+                    android:textColor="@color/muted_foreground"
                     android:background="@drawable/btn_orange"
                     app:backgroundTint="@null"
                     android:drawablePadding="8dp" />

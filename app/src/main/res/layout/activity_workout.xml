@@ -18,7 +18,7 @@
             android:orientation="vertical"
             android:gravity="center"
             android:layout_gravity="center"
-            android:background="#000000">
+            android:background="@color/background">
 
             <!-- Localização atual -->
             <LinearLayout
@@ -32,8 +32,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="LOCALIZAÇÃO ATUAL"
-                    android:textColor="#9CA3AF"
+                    android:text="@string/location_title"
+                    android:textColor="@color/muted_foreground"
                     android:textSize="12sp"
                     android:fontFamily="maven_pro"
                     android:layout_marginBottom="8dp" />
@@ -54,8 +54,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="LATITUDE"
-                            android:textColor="#F97316"
+                            android:text="@string/latitude_title"
+                            android:textColor="@color/primary_foreground"
                             android:textStyle="bold"
                             android:textSize="12sp"
                             android:fontFamily="maven_pro" />
@@ -64,8 +64,8 @@
                             android:id="@+id/tvLatitude"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0.0000°N"
-                            android:textColor="#FFFFFF"
+                            android:text="@string/no_text"
+                            android:textColor="@color/muted_foreground"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:fontFamily="maven_pro" />
@@ -80,8 +80,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="LONGITUDE"
-                            android:textColor="#F97316"
+                            android:text="@string/longitude_title"
+                            android:textColor="@color/primary_foreground"
                             android:textStyle="bold"
                             android:textSize="12sp"
                             android:fontFamily="maven_pro" />
@@ -90,8 +90,8 @@
                             android:id="@+id/tvLongitude"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0.0000°W"
-                            android:textColor="#FFFFFF"
+                            android:text="@string/no_text"
+                            android:textColor="@color/muted_foreground"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:fontFamily="maven_pro" />
@@ -125,8 +125,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Distância"
-                        android:textColor="#9CA3AF"
+                        android:text="@string/distance_title"
+                        android:textColor="@color/primary_foreground"
                         android:textSize="14sp"
                         android:fontFamily="maven_pro" />
 
@@ -134,8 +134,8 @@
                         android:id="@+id/tvDistancia"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0.00"
-                        android:textColor="#FFFFFF"
+                        android:text="@string/no_text"
+                        android:textColor="@color/muted_foreground"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:fontFamily="maven_pro" />
@@ -143,8 +143,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="km"
-                        android:textColor="#9CA3AF"
+                        android:text="@string/distance_unit"
+                        android:textColor="@color/primary_foreground"
                         android:textSize="12sp"
                         android:fontFamily="maven_pro" />
                 </LinearLayout>
@@ -160,8 +160,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Calorias"
-                        android:textColor="#9CA3AF"
+                        android:text="@string/calories_title"
+                        android:textColor="@color/primary_foreground"
                         android:textSize="14sp"
                         android:fontFamily="maven_pro" />
 
@@ -169,8 +169,8 @@
                         android:id="@+id/tvCalorias"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#FFFFFF"
+                        android:text="@string/no_text"
+                        android:textColor="@color/muted_foreground"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:fontFamily="maven_pro" />
@@ -179,7 +179,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="kcal"
-                        android:textColor="#9CA3AF"
+                        android:textColor="@color/primary_foreground"
                         android:textSize="12sp"
                         android:fontFamily="maven_pro" />
                 </LinearLayout>
@@ -204,8 +204,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Velocidade"
-                        android:textColor="#9CA3AF"
+                        android:text="@string/speed_title"
+                        android:textColor="@color/primary_foreground"
                         android:textSize="14sp"
                         android:fontFamily="maven_pro" />
 
@@ -213,8 +213,8 @@
                         android:id="@+id/tvVelocidade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0.0"
-                        android:textColor="#FFFFFF"
+                        android:text="@string/no_text"
+                        android:textColor="@color/muted_foreground"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:fontFamily="maven_pro" />
@@ -222,8 +222,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="km/h"
-                        android:textColor="#9CA3AF"
+                        android:text="@string/speed_unit"
+                        android:textColor="@color/primary_foreground"
                         android:textSize="12sp"
                         android:fontFamily="maven_pro" />
                 </LinearLayout>
@@ -239,8 +239,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tempo"
-                        android:textColor="#9CA3AF"
+                        android:text="@string/duration_title"
+                        android:textColor="@color/primary_foreground"
                         android:textSize="14sp"
                         android:fontFamily="maven_pro" />
 
@@ -248,8 +248,8 @@
                         android:id="@+id/tvTempo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="00:00:00"
-                        android:textColor="#FFFFFF"
+                        android:text="@string/no_text"
+                        android:textColor="@color/muted_foreground"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:fontFamily="maven_pro" />
@@ -268,7 +268,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Terminar"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/muted_foreground"
                     android:textAllCaps="false"
                     android:background="@drawable/btn_red"
                     android:fontFamily="maven_pro" />
