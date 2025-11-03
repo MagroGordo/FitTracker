@@ -9,13 +9,14 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.Calendar;
 
 public class UserRepository {
 
@@ -68,6 +69,14 @@ public class UserRepository {
         data.put("height", user.getHeight());
         data.put("updatedAt", System.currentTimeMillis());
 
+        // NOVOS campos
+        data.put("streak", user.getStreak());
+        if (user.getLastWorkoutAt() != null) {
+            data.put("lastWorkoutAt", new Timestamp(user.getLastWorkoutAt()));
+        } else {
+            data.put("lastWorkoutAt", null);
+        }
+
         firestore.collection("users")
                 .document(user.getFirebaseUid())
                 .set(data, SetOptions.merge());
@@ -103,6 +112,17 @@ public class UserRepository {
 
                         Double height = doc.getDouble("height");
                         if (height != null) user.setHeight(height);
+
+                        // Lê streak e lastWorkoutAt (se existirem)
+                        Long streakLong = doc.contains("streak") ? (doc.getLong("streak") != null ? doc.getLong("streak") : null) : null;
+                        if (streakLong != null) user.setStreak(streakLong.intValue());
+
+                        try {
+                            com.google.firebase.Timestamp lastW = doc.getTimestamp("lastWorkoutAt");
+                            if (lastW != null) user.setLastWorkoutAt(lastW.toDate());
+                        } catch (Exception e) {
+                            android.util.Log.e("UserRepository", "Erro ao processar lastWorkoutAt", e);
+                        }
 
                         user.setSynced(true);
 
@@ -154,6 +174,17 @@ public class UserRepository {
                     Double height = doc.getDouble("height");
                     if (height != null) user.setHeight(height);
 
+                    // Lê streak e lastWorkoutAt (se existirem)
+                    Long streakLong = doc.contains("streak") ? (doc.getLong("streak") != null ? doc.getLong("streak") : null) : null;
+                    if (streakLong != null) user.setStreak(streakLong.intValue());
+
+                    try {
+                        com.google.firebase.Timestamp lastW = doc.getTimestamp("lastWorkoutAt");
+                        if (lastW != null) user.setLastWorkoutAt(lastW.toDate());
+                    } catch (Exception e) {
+                        android.util.Log.e("UserRepository", "Erro ao processar lastWorkoutAt", e);
+                    }
+
                     if (cb != null) cb.onLoaded(user);
 
                     // Persistir localmente
@@ -168,5 +199,68 @@ public class UserRepository {
                     });
                 })
                 .addOnFailureListener(e -> { if (cb != null) cb.onError(e); });
+    }
+
+    // --------------------
+    // NOVO: registar um treino (atualiza streak)
+    // --------------------
+    public void recordWorkout(String firebaseUid, Date workoutDate) {
+        if (firebaseUid == null) return;
+        final Date wDate = workoutDate != null ? workoutDate : new Date();
+
+        executor.execute(() -> {
+            User user = userDao.getByFirebaseUid(firebaseUid);
+            if (user == null) return;
+
+            // Normaliza para início do dia (midnight) para comparar apenas data
+            Date normalizedWorkout = truncateToStartOfDay(wDate);
+            Date last = user.getLastWorkoutAt();
+            int newStreak = 1;
+
+            if (last != null) {
+                Date normalizedLast = truncateToStartOfDay(last);
+                long diffMillis = normalizedWorkout.getTime() - normalizedLast.getTime();
+                long daysBetween = TimeUnit.MILLISECONDS.toDays(diffMillis);
+
+                if (daysBetween == 0) {
+                    // mesmo dia -> não incrementa
+                    return;
+                } else if (daysBetween == 1) {
+                    newStreak = user.getStreak() + 1;
+                } else {
+                    // gap maior que 1 dia -> reset para 1
+                    newStreak = 1;
+                }
+            } else {
+                // sem último -> começa streak com 1
+                newStreak = 1;
+            }
+
+            user.setStreak(newStreak);
+            user.setLastWorkoutAt(wDate);
+            user.setSynced(false);
+            userDao.update(user);
+
+            // Envia para Firestore os campos novos
+            Map<String, Object> data = new HashMap<>();
+            data.put("streak", newStreak);
+            data.put("lastWorkoutAt", new Timestamp(wDate));
+            data.put("updatedAt", System.currentTimeMillis());
+
+            firestore.collection("users")
+                    .document(firebaseUid)
+                    .set(data, SetOptions.merge());
+        });
+    }
+
+    // Helper: truncar data para início do dia respetando timezone local
+    private Date truncateToStartOfDay(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 }

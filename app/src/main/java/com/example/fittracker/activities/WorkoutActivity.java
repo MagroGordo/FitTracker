@@ -79,7 +79,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         bindViews();
 
-        // Repositórios com Context (alinhado com a tua implementação atual)
+        // Repositórios com Context
         workoutRepo = new WorkoutRepository(getApplicationContext());
         userRepo = new UserRepository(getApplicationContext());
         ioExecutor = Executors.newSingleThreadExecutor();
@@ -168,7 +168,7 @@ public class WorkoutActivity extends AppCompatActivity {
             );
             float segment = results[0];
 
-            // Filtro anti-ruído (ignora flutuações muito pequenas e saltos absurdos)
+            // Filtro anti-ruído
             if (segment > 1f && segment < 100f) {
                 totalDistanceMeters += segment;
             }
@@ -234,7 +234,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     "Duração insuficiente. É necessário pelo menos " + minSeconds + " segundos");
         }
 
-        // Validar calorias (se a distância e duração estão OK, as calorias não devem ser 0)
+        // Validar calorias
         if (kcal < 0) {
             return new WorkoutValidationResult(false,
                     "Calorias inválidas. Continua o treino para registar valores válidos");
@@ -277,7 +277,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         ioExecutor.execute(() -> {
             try {
-                // Obter o UID diretamente do Firebase Auth (sessão atual)
+                // Obter o UID diretamente do Firebase Auth
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 if (firebaseUser == null) {
                     runOnUiThread(() -> Toast.makeText(this, "Sessão expirada", Toast.LENGTH_SHORT).show());
@@ -294,6 +294,8 @@ public class WorkoutActivity extends AppCompatActivity {
                     return;
                 }
 
+                // Criar workout
+                Date workoutDate = new Date();
                 Workout w = new Workout();
                 w.setUserId(current.getId());
                 w.setType(workoutType);
@@ -301,16 +303,23 @@ public class WorkoutActivity extends AppCompatActivity {
                 w.setDuration((int) durationMs);
                 w.setCalories((double) kcal);
                 w.setAvgSpeed((double) avgKmh);
-                w.setDate(new Date());
+                w.setDate(workoutDate);
 
-                // Usar o UID correto do Firebase Auth
+                // Guardar workout
                 workoutRepo.insertAndSync(w, firebaseUid);
-                android.util.Log.d("WorkoutActivity", "Workout saved and syncing to Firestore for user: " + firebaseUid);
+                android.util.Log.d("WorkoutActivity", "✅ Workout guardado e a sincronizar com Firestore");
 
-                runOnUiThread(() -> Toast.makeText(this, "Treino guardado!", Toast.LENGTH_SHORT).show());
+                // IMPORTANTE: Registar o treino para atualizar a streak
+                userRepo.recordWorkout(firebaseUid, workoutDate);
+                android.util.Log.d("WorkoutActivity", "✅ Streak atualizada para o utilizador: " + firebaseUid);
+
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Treino guardado! 🎉", Toast.LENGTH_SHORT).show();
+                });
+
                 goToDashboard(true);
             } catch (Exception e) {
-                e.printStackTrace();
+                android.util.Log.e("WorkoutActivity", "❌ Erro ao guardar treino", e);
                 runOnUiThread(() -> Toast.makeText(this, "Erro ao guardar treino", Toast.LENGTH_SHORT).show());
                 goToDashboard(false);
             }
@@ -320,6 +329,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private void goToDashboard(boolean saved) {
         Intent intent = new Intent(WorkoutActivity.this, DashboardActivity.class);
         intent.putExtra("refresh_last_workout", saved);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         finish();
     }
@@ -329,7 +339,9 @@ public class WorkoutActivity extends AppCompatActivity {
         super.onDestroy();
         stopLocationUpdates();
         stopTimer();
-        if (ioExecutor != null) ioExecutor.shutdown();
+        if (ioExecutor != null && !ioExecutor.isShutdown()) {
+            ioExecutor.shutdown();
+        }
     }
 
     @Override

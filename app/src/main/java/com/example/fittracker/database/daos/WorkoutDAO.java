@@ -50,4 +50,11 @@ public interface WorkoutDAO {
 
     @Query("SELECT * FROM workouts WHERE firebase_uid = :firebaseUid ORDER BY date DESC")
     List<Workout> getAllWorkoutsByFirebaseUid(String firebaseUid);
+
+    // NOVOS MÉTODOS: Buscar treinos de hoje
+    @Query("SELECT * FROM workouts WHERE firebase_uid = :firebaseUid AND date >= :startOfDay ORDER BY date DESC")
+    List<Workout> getTodayWorkoutsByFirebaseUid(String firebaseUid, Date startOfDay);
+
+    @Query("SELECT * FROM workouts WHERE user_id = :userId AND date >= :startOfDay ORDER BY date DESC")
+    List<Workout> getTodayWorkoutsByUserId(long userId, Date startOfDay);
 }

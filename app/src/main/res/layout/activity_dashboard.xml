@@ -231,6 +231,44 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- Objetivo Atual -->
+                <LinearLayout
+                    android:id="@+id/blocoObjetivoAtual"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/login_box"
+                    android:padding="20dp"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Objetivo Atual"
+                        android:textColor="#FFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvGoalDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sem objetivo definido"
+                        android:textColor="@color/primary_foreground"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvGoalTarget"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Distância alvo: — km"
+                        android:textColor="@color/secondary_muted_foreground"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
                 <!-- Estatísticas rápidas -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -239,6 +277,7 @@
                     android:weightSum="2"
                     android:layout_marginBottom="24dp">
 
+                    <!-- Objetivo Diário -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -257,14 +296,16 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tvGoalProgress"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/no_text"
                             android:textColor="@color/primary_foreground"
                             android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:textSize="24sp" />
                     </LinearLayout>
 
+                    <!-- Streak -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -283,6 +324,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tvStreak"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/no_text"

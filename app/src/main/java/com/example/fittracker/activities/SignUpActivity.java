@@ -14,6 +14,7 @@ import com.example.fittracker.R;
 import com.example.fittracker.core.Prefs;
 import com.example.fittracker.database.entities.User;
 import com.example.fittracker.database.repositories.UserRepository;
+import com.example.fittracker.database.repositories.GoalRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,6 +24,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -32,6 +35,8 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
     private UserRepository userRepository;
+    private GoalRepository goalRepository;
+    private ExecutorService executor;
 
     private Calendar selectedDob;
 
@@ -43,6 +48,8 @@ public class SignUpActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         userRepository = new UserRepository(getApplicationContext());
+        goalRepository = new GoalRepository(getApplicationContext());
+        executor = Executors.newSingleThreadExecutor();
 
         inputFullName = findViewById(R.id.inputFullName);
         inputEmail = findViewById(R.id.inputEmail);
@@ -185,18 +192,50 @@ public class SignUpActivity extends AppCompatActivity {
                     data.put("name", name);
                     data.put("email", email);
                     data.put("gender", gender);
-                    data.put("birthday", birthday); // <<< agora Date, não long
+                    data.put("birthday", birthday);
                     data.put("height", altura);
                     data.put("weight", peso);
-                    data.put("createdAt", new Date()); // também podes guardar como Date
+                    data.put("createdAt", new Date());
 
                     firestore.collection("users")
                             .document(uid)
                             .set(data, SetOptions.merge())
                             .addOnSuccessListener(unused -> {
-                                new Thread(() -> userRepository.insertLocal(user)).start();
+                                // Guardar utilizador localmente e criar objetivo
+                                executor.execute(() -> {
+                                    try {
+                                        // Insere utilizador no Room
+                                        long userId = userRepository.getUserByEmail(email) != null
+                                                ? userRepository.getUserByEmail(email).getId()
+                                                : 0;
+
+                                        if (userId == 0) {
+                                            userRepository.insertLocal(user);
+                                            // Aguarda um pouco para garantir que foi inserido
+                                            Thread.sleep(300);
+                                            User inserted = userRepository.getUserByEmail(email);
+                                            if (inserted != null) {
+                                                userId = inserted.getId();
+                                            }
+                                        }
+
+                                        // Cria objetivo aleatório
+                                        if (userId > 0) {
+                                            android.util.Log.d("SignUp", "🎯 A criar objetivo para utilizador ID: " + userId);
+                                            goalRepository.createRandomGoalForUser(userId, uid);
+                                            android.util.Log.d("SignUp", "✅ Objetivo criado com sucesso!");
+                                        } else {
+                                            android.util.Log.e("SignUp", "❌ Erro: userId inválido");
+                                        }
+
+                                    } catch (Exception e) {
+                                        android.util.Log.e("SignUp", "❌ Erro ao criar objetivo", e);
+                                    }
+                                });
+
                                 Prefs.setRememberMe(getApplicationContext(), false);
-                                Toast.makeText(this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Conta criada com sucesso! 🎯", Toast.LENGTH_SHORT).show();
+
                                 Intent intent = new Intent(this, DashboardActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
@@ -210,5 +249,13 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnFailureListener(err -> {
                     Toast.makeText(this, "Erro ao criar conta: " + err.getMessage(), Toast.LENGTH_LONG).show();
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (executor != null && !executor.isShutdown()) {
+            executor.shutdown();
+        }
     }
 }

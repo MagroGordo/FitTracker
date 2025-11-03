@@ -128,43 +128,48 @@ public class LogInActivity extends AppCompatActivity {
 
                     Log.d(TAG, "Login bem-sucedido: " + fbUser.getUid());
 
-                    // Guardar escolha de Remember Me
                     boolean remember = rememberMe != null && rememberMe.isChecked();
                     Prefs.setRememberMe(getApplicationContext(), remember);
 
-                    // Sincronizar com Room
-                    new Thread(() -> {
-                        try {
-                            User existing = userRepository.getUserByEmail(email);
-                            if (existing != null) {
-                                boolean changed = false;
-                                if (existing.getFirebaseUid() == null || !existing.getFirebaseUid().equals(fbUser.getUid())) {
-                                    existing.setFirebaseUid(fbUser.getUid());
-                                    changed = true;
+                    // 🔹 Sincronizar utilizador Firestore -> Room
+                    userRepository.fetchUserFromFirestore(fbUser.getUid(), new UserRepository.UserLoadCallback() {
+                        @Override
+                        public void onLoaded(User user) {
+                            Log.d(TAG, "✅ Utilizador sincronizado localmente: " + (user != null ? user.getName() : "null"));
+
+                            // ⚙️ Garante que existe localmente com FirebaseUid
+                            new Thread(() -> {
+                                try {
+                                    if (user != null) {
+                                        User existing = userRepository.getByFirebaseUid(fbUser.getUid());
+                                        if (existing == null) {
+                                            userRepository.insertLocal(user);
+                                        } else {
+                                            user.setId(existing.getId());
+                                            userRepository.updateLocal(user);
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Erro ao atualizar utilizador local", e);
+                                } finally {
+                                    runOnUiThread(() -> {
+                                        setLoading(false);
+                                        goToDashboardSafe();
+                                    });
                                 }
-                                if (existing.getEmail() == null) {
-                                    existing.setEmail(email);
-                                    changed = true;
-                                }
-                                if (changed) userRepository.updateLocal(existing);
-                            } else {
-                                User shell = new User();
-                                shell.setFirebaseUid(fbUser.getUid());
-                                shell.setEmail(email);
-                                shell.setName(fbUser.getDisplayName() != null ? fbUser.getDisplayName() : email);
-                                shell.setCreatedAt(new Date());
-                                shell.setSynced(true);
-                                userRepository.insertLocal(shell);
-                            }
-                        } catch (Throwable t) {
-                            Log.e(TAG, "Erro a sincronizar User em Room", t);
-                        } finally {
+                            }).start();
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Log.e(TAG, "❌ Erro ao sincronizar utilizador Firestore -> Room", e);
                             runOnUiThread(() -> {
+                                Toast.makeText(LogInActivity.this, "Erro a carregar dados do utilizador", Toast.LENGTH_SHORT).show();
                                 setLoading(false);
                                 goToDashboardSafe();
                             });
                         }
-                    }).start();
+                    });
                 })
                 .addOnFailureListener(err -> {
                     Log.e(TAG, "Erro login Firebase", err);

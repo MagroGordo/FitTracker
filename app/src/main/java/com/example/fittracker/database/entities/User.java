@@ -22,7 +22,6 @@ public class User {
     private double weight;
     private double height;
 
-
     @ColumnInfo(name = "created_at")
     private Date createdAt;
 
@@ -31,7 +30,14 @@ public class User {
 
     private boolean synced;
 
+    // NOVOS CAMPOS PARA STREAK
+    private int streak;
+
+    @ColumnInfo(name = "last_workout_at")
+    private Date lastWorkoutAt;
+
     public User() {
+        this.streak = 0;
     }
 
     public User(String name, String email, String password) {
@@ -39,6 +45,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.synced = false;
+        this.streak = 0;
     }
 
     // Getters e Setters
@@ -61,7 +68,6 @@ public class User {
     public void setGender(String gender) { this.gender = gender; }
 
     public Date getBirthday() { return birthday; }
-
     public void setBirthday(Date birthday) { this.birthday = birthday; }
 
     public double getWeight() { return weight; }
@@ -79,6 +85,13 @@ public class User {
     public boolean isSynced() { return synced; }
     public void setSynced(boolean synced) { this.synced = synced; }
 
+    // Getters/Setters do STREAK
+    public int getStreak() { return streak; }
+    public void setStreak(int streak) { this.streak = streak; }
+
+    public Date getLastWorkoutAt() { return lastWorkoutAt; }
+    public void setLastWorkoutAt(Date lastWorkoutAt) { this.lastWorkoutAt = lastWorkoutAt; }
+
     @Override
     public String toString() {
         return "User{" +
@@ -88,6 +101,8 @@ public class User {
                 ", birthday=" + birthday +
                 ", weight=" + weight +
                 ", height=" + height +
+                ", streak=" + streak +
+                ", lastWorkoutAt=" + lastWorkoutAt +
                 '}';
     }
 }

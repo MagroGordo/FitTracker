@@ -48,4 +48,10 @@ public interface UserDAO {
 
     @Query("SELECT * FROM users LIMIT 1")
     User getFirstUser();
+
+    @Query("UPDATE users SET streak = :streak, last_workout_at = :lastWorkout WHERE firebase_uid = :uid")
+    int updateStreak(String uid, int streak, java.util.Date lastWorkout);
+
+    @Query("SELECT id FROM users WHERE firebase_uid = :firebaseUid LIMIT 1")
+    Long getUserIdByFirebaseUid(String firebaseUid);
 }

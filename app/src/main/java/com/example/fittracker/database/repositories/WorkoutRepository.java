@@ -8,6 +8,7 @@ import com.example.fittracker.database.entities.Workout;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,17 @@ public class WorkoutRepository {
 
     public List<Workout> getAllWorkoutsByFirebaseUid(String firebaseUid) {
         return workoutDao.getAllWorkoutsByFirebaseUid(firebaseUid);
+    }
+
+    public List<Workout> getTodayWorkoutsByFirebaseUid(String firebaseUid, Date startOfDay) {
+        return workoutDao.getTodayWorkoutsByFirebaseUid(firebaseUid, startOfDay);
+    }
+
+    /**
+     * Busca treinos de hoje por User ID
+     */
+    public List<Workout> getTodayWorkoutsByUserId(long userId, Date startOfDay) {
+        return workoutDao.getTodayWorkoutsByUserId(userId, startOfDay);
     }
 
     // COMBINED: Insert local + sync to Firebase

@@ -2,6 +2,7 @@ package com.example.fittracker.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,10 +16,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.fittracker.R;
 import com.example.fittracker.core.Prefs;
+import com.example.fittracker.database.entities.Goal;
 import com.example.fittracker.database.entities.User;
 import com.example.fittracker.database.entities.Workout;
 import com.example.fittracker.database.repositories.UserRepository;
 import com.example.fittracker.database.repositories.WorkoutRepository;
+import com.example.fittracker.database.repositories.GoalRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -44,10 +47,23 @@ public class DashboardActivity extends AppCompatActivity {
     // Último treino views
     private TextView tvUltTreinoTipo, tvUltTreinoQuando, tvUltTreinoDist, tvUltTreinoTempo, tvUltTreinoKcal, tvUltTreinoVel;
 
+    // Streak view
+    private TextView tvStreak;
+
+    // Goal views (já existente no XML)
+    private TextView tvGoalProgress;
+
+    private TextView tvGoalDescription;
+    private TextView tvGoalTarget;
+
     // Repositórios e IO
     private UserRepository userRepo;
     private WorkoutRepository workoutRepo;
+    private GoalRepository goalRepo;
     private final ExecutorService io = Executors.newSingleThreadExecutor();
+
+    // Flag para controlar primeira execução
+    private boolean isFirstLoad = true;
 
     private enum NavItem { DASHBOARD, TREINOS, PERFIL }
 
@@ -75,9 +91,43 @@ public class DashboardActivity extends AppCompatActivity {
         tvUltTreinoKcal = findViewById(R.id.tvUltTreinoKcal);
         tvUltTreinoVel = findViewById(R.id.tvUltTreinoVel);
 
+        // Streak view
+        tvStreak = findViewById(R.id.tvStreak);
+
+        // Goal progress (encontra o TextView na secção "Estatísticas rápidas")
+        tvGoalProgress = findViewById(R.id.tvGoalProgress);
+        if (tvGoalProgress == null) {
+            // Fallback: usa um dos TextViews existentes na secção de goals
+            android.util.Log.w("Dashboard", "tvGoalProgress não encontrado no layout");
+        }
+
+        tvGoalDescription = findViewById(R.id.tvGoalDescription);
+        tvGoalTarget = findViewById(R.id.tvGoalTarget);
+
         userRepo = new UserRepository(getApplicationContext());
         workoutRepo = new WorkoutRepository(getApplicationContext());
+        goalRepo = new com.example.fittracker.database.repositories.GoalRepository(getApplicationContext());
 
+        setupDrawer();
+        setupNavigationButtons();
+
+        // Inicialmente mostra traços no cartão "Último Treino"
+        showDashedLastWorkout();
+
+        // Destacar item ativo
+        highlightCurrentNav(NavItem.DASHBOARD);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Carregar dados sempre que a activity volta ao primeiro plano
+        android.util.Log.d("Dashboard", "📱 onResume - A recarregar dados...");
+        loadCurrentUserData();
+    }
+
+    private void setupDrawer() {
         if (btnMenu != null) {
             btnMenu.setOnClickListener(v -> {
                 if (drawerLayout != null) drawerLayout.openDrawer(GravityCompat.START);
@@ -120,7 +170,9 @@ public class DashboardActivity extends AppCompatActivity {
                 if (drawerLayout != null) drawerLayout.closeDrawer(GravityCompat.START);
             });
         }
+    }
 
+    private void setupNavigationButtons() {
         // Botão principal
         startTrainingBtn = findViewById(R.id.btnIniciarTreino);
         if (startTrainingBtn != null) {
@@ -164,15 +216,6 @@ public class DashboardActivity extends AppCompatActivity {
                 performLogout();
             });
         }
-
-        // Inicialmente mostra traços no cartão "Último Treino"
-        showDashedLastWorkout();
-
-        // Carregar dados do utilizador para header + drawer + último treino
-        loadCurrentUserData();
-
-        // Destacar item ativo
-        highlightCurrentNav(NavItem.DASHBOARD);
     }
 
     private void highlightCurrentNav(NavItem active) {
@@ -230,20 +273,74 @@ public class DashboardActivity extends AppCompatActivity {
         if (tvHeaderEmail != null) tvHeaderEmail.setText(fallbackEmail != null ? fallbackEmail : "");
         if (tvDrawerEmail != null) tvDrawerEmail.setText(fallbackEmail != null ? fallbackEmail : "");
 
+        // Na primeira execução, sincroniza do Firestore
+        // Nas seguintes, carrega direto do Room (mais rápido)
+        if (isFirstLoad) {
+            android.util.Log.d("Dashboard", "🔄 Primeira carga - Sincronizando com Firestore...");
+            syncAndLoadData(firebaseUid, fallbackEmail);
+            isFirstLoad = false;
+        } else {
+            android.util.Log.d("Dashboard", "⚡ Recarga - Usando dados locais...");
+            loadUserAndWorkoutsFromLocal(firebaseUid, fallbackEmail);
+        }
+    }
+
+    private void syncAndLoadData(String firebaseUid, String fallbackEmail) {
         // Sincronizar workouts do Firestore PRIMEIRO
         workoutRepo.syncFromFirebase(firebaseUid, new WorkoutRepository.SyncCallback() {
             @Override
             public void onComplete() {
                 android.util.Log.d("Dashboard", "✅ Workouts sincronizados com sucesso");
-                // Após sincronização, carregar dados do utilizador
                 loadUserAndWorkouts(firebaseUid, fallbackEmail);
             }
 
             @Override
             public void onError(Exception e) {
                 android.util.Log.e("Dashboard", "❌ Erro ao sincronizar workouts", e);
-                // Mesmo com erro, tentar carregar dados locais
                 loadUserAndWorkouts(firebaseUid, fallbackEmail);
+            }
+        });
+    }
+
+    private void loadUserAndWorkoutsFromLocal(String firebaseUid, String fallbackEmail) {
+        // Carrega apenas do Room (sem sincronização com Firestore)
+        io.execute(() -> {
+            try {
+                User local = userRepo.getByFirebaseUid(firebaseUid);
+                Workout lastWorkout = workoutRepo.getLastWorkoutByFirebaseUid(firebaseUid);
+
+                runOnUiThread(() -> {
+                    if (local != null) {
+                        bindUserToUI(local, fallbackEmail);
+                        // Carrega objetivo e progresso
+                        loadGoalProgress(local.getId(), firebaseUid);
+                    }
+                    if (lastWorkout != null) {
+                        bindLastWorkout(lastWorkout);
+                    } else {
+                        showDashedLastWorkout();
+                    }
+                });
+            } catch (Exception e) {
+                android.util.Log.e("Dashboard", "Erro ao carregar dados locais", e);
+                runOnUiThread(this::showDashedLastWorkout);
+            }
+        });
+
+        // Em background, sincroniza com Firestore sem bloquear UI
+        userRepo.fetchUserFromFirestore(firebaseUid, new UserRepository.UserLoadCallback() {
+            @Override
+            public void onLoaded(User user) {
+                runOnUiThread(() -> {
+                    if (user != null) {
+                        bindUserToUI(user, fallbackEmail);
+                        loadGoalProgress(user.getId(), firebaseUid);
+                    }
+                });
+            }
+            @Override
+            public void onError(Exception e) {
+                android.util.Log.e("Dashboard", "Erro ao atualizar do Firestore", e);
             }
         });
     }
@@ -256,8 +353,8 @@ public class DashboardActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (local != null) {
                         bindUserToUI(local, fallbackEmail);
+                        loadGoalProgress(local.getId(), firebaseUid);
                     }
-                    // MUDANÇA: usar firebaseUid em vez de userId
                     loadLastWorkoutByFirebaseUid(firebaseUid);
                 });
             } catch (Exception e) {
@@ -271,6 +368,7 @@ public class DashboardActivity extends AppCompatActivity {
             @Override public void onLoaded(User user) {
                 runOnUiThread(() -> {
                     bindUserToUI(user, fallbackEmail);
+                    loadGoalProgress(user.getId(), firebaseUid);
                     loadLastWorkoutByFirebaseUid(firebaseUid);
                 });
             }
@@ -284,14 +382,26 @@ public class DashboardActivity extends AppCompatActivity {
         if (user == null) {
             if (tvHeaderName != null) tvHeaderName.setText("Utilizador");
             if (tvDrawerName != null) tvDrawerName.setText("Utilizador");
+            if (tvStreak != null) tvStreak.setText("0 dias");
             return;
         }
+
         String name = user.getName();
         String email = user.getEmail() != null ? user.getEmail() : fallbackEmail;
+
         if (tvHeaderName != null) tvHeaderName.setText(name != null && !name.isEmpty() ? name : "Utilizador");
         if (tvDrawerName != null) tvDrawerName.setText(name != null && !name.isEmpty() ? name : "Utilizador");
         if (tvHeaderEmail != null) tvHeaderEmail.setText(email != null ? email : "");
         if (tvDrawerEmail != null) tvDrawerEmail.setText(email != null ? email : "");
+
+        // Mostrar streak
+        if (tvStreak != null) {
+            int streak = user.getStreak();
+            String streakText = streak == 1 ? "1 dia" : streak + " dias";
+            tvStreak.setText(streakText);
+
+            android.util.Log.d("Dashboard", "✅ Streak atual: " + streak + " dias");
+        }
     }
 
     // ==== Ultimo Treino ====
@@ -369,8 +479,8 @@ public class DashboardActivity extends AppCompatActivity {
             if (dur <= 0) {
                 tempoStr = "—";
             } else {
+                // Duração está sempre em milissegundos
                 long ms = dur;
-                if (ms < 10_000_000L) ms = ms * 1000L;
                 long totalSec = ms / 1000L;
                 long h = totalSec / 3600L;
                 long m = (totalSec % 3600L) / 60L;
@@ -397,5 +507,105 @@ public class DashboardActivity extends AppCompatActivity {
                 tvUltTreinoVel.setText("—");
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (io != null && !io.isShutdown()) {
+            io.shutdown();
+        }
+    }
+
+    // ==== Goal Progress ====
+
+    private void loadGoalProgress(long userId, String firebaseUid) {
+        android.util.Log.d("Dashboard", "🎯 loadGoalProgress chamado - userId: " + userId + ", firebaseUid: " + firebaseUid);
+
+        if (userId <= 0) {
+            Log.e("Dashboard", "⚠️ userId inválido (" + userId + "). Utilizador ainda não sincronizado no Room.");
+            runOnUiThread(() -> {
+                if (tvGoalProgress != null) tvGoalProgress.setText("0%");
+            });
+            return;
+        }
+
+        io.execute(() -> {
+            try {
+                // Busca objetivo do utilizador
+                com.example.fittracker.database.entities.Goal goal = goalRepo.getByUser(userId);
+
+                if (goal == null) {
+                    android.util.Log.d("Dashboard", "📊 Nenhum objetivo encontrado - A criar objetivo aleatório...");
+                    // Cria objetivo aleatório se não existir
+                    goalRepo.createRandomGoalForUser(userId, firebaseUid);
+                    // Aguarda um pouco e tenta novamente
+                    Thread.sleep(500);
+                    goal = goalRepo.getByUser(userId);
+
+                    if (goal != null) {
+                        android.util.Log.d("Dashboard", "✅ Objetivo criado: " + goal.getDailyDistance() + "km, " + goal.getDailyCalories() + " kcal");
+                    } else {
+                        android.util.Log.e("Dashboard", "❌ Falha ao criar objetivo!");
+                    }
+                }
+
+                if (goal == null) {
+                    android.util.Log.e("Dashboard", "❌ Goal é null - Mostrando 0%");
+                    runOnUiThread(() -> {
+                        if (tvGoalProgress != null) {
+                            tvGoalProgress.setText("0%");
+                            android.util.Log.d("Dashboard", "✅ TextView atualizado para 0%");
+                        } else {
+                            android.util.Log.e("Dashboard", "❌ tvGoalProgress é null!");
+                        }
+                    });
+                    return;
+                }
+
+                android.util.Log.d("Dashboard", "📊 Objetivo encontrado: " + goal.getDailyDistance() + "km, " + goal.getDailyCalories() + " kcal");
+
+                // Busca treinos de hoje
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+                cal.set(java.util.Calendar.MINUTE, 0);
+                cal.set(java.util.Calendar.SECOND, 0);
+                cal.set(java.util.Calendar.MILLISECOND, 0);
+                java.util.Date startOfDay = cal.getTime();
+
+                android.util.Log.d("Dashboard", "📅 A buscar treinos desde: " + startOfDay);
+
+                java.util.List<com.example.fittracker.database.entities.Workout> todayWorkouts =
+                        workoutRepo.getTodayWorkoutsByFirebaseUid(firebaseUid, startOfDay);
+
+                android.util.Log.d("Dashboard", "📊 Treinos de hoje: " + (todayWorkouts != null ? todayWorkouts.size() : 0));
+
+                // Calcula progresso
+                com.example.fittracker.database.GoalProgressHelper.ProgressResult progress =
+                        com.example.fittracker.database.GoalProgressHelper.calculateProgress(goal, todayWorkouts);
+
+                android.util.Log.d("Dashboard", "📊 Progresso calculado: " + progress.getPercentage() + "%");
+
+                runOnUiThread(() -> {
+                    if (tvGoalProgress != null) {
+                        tvGoalProgress.setText(progress.getFormattedProgress());
+                        android.util.Log.d("Dashboard", "✅ TextView atualizado: " + progress.getFormattedProgress());
+                        android.util.Log.d("Dashboard", "📊 Progresso: " + progress.getPercentage() + "% " +
+                                "(" + progress.getFormattedDistance() + ", " + progress.getFormattedCalories() + ")");
+                    } else {
+                        android.util.Log.e("Dashboard", "❌ tvGoalProgress é null na UI!");
+                    }
+                });
+
+            } catch (Exception e) {
+                android.util.Log.e("Dashboard", "❌ Erro ao carregar progresso do objetivo", e);
+                e.printStackTrace();
+                runOnUiThread(() -> {
+                    if (tvGoalProgress != null) {
+                        tvGoalProgress.setText("0%");
+                    }
+                });
+            }
+        });
     }
 }
