@@ -100,7 +100,7 @@
                     android:hint="@string/birthday_hint"
                     android:focusable="false"
                     android:clickable="true"
-                    android:background="#0000"
+                    android:background="#000000"
                     android:textColor="#FFFF"
                     android:textColorHint="#9CA3AF"
                     android:paddingHorizontal="12dp"

@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -39,7 +40,7 @@ public class StartTrainingActivity extends AppCompatActivity {
 
     // Cores
     private final int colorOrange = 0xFFF97316;
-    private final int colorWhite = 0xFFFF;
+    private final int colorWhite = 0xFFFFFFFF;
 
     private Button btnStart;
 

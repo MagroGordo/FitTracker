@@ -15,7 +15,7 @@
 
     <!-- Sign Up -->
     <string name="signup_title">Create Account</string>
-    <string name="signup_subtitle">Entre para continuar</string>
+    <string name="signup_subtitle">Fill the form to proceed</string>
     <string name="name_hint">Full Name</string>
     <string name="birthday_hint">Birthday</string>
     <string name="weight_hint">Weight (kg)</string>
@@ -33,6 +33,7 @@
     <string name="calories_title">Calories</string>
     <string name="speed_title">Speed</string>
     <string name="goal_title">Goal</string>
+    <string name="objective_title">Current Objective</string>
     <string name="streak_title">Streak</string>
     <string name="no_text">—</string>
 
@@ -52,12 +53,18 @@
     <string name="speed_unit">Km/h</string>
 
     <!-- Profile -->
-    <string name="password_title">Password Recovery</string>
-    <string name="password_subtitle">Insert and confirm new password</string>
-    <string name="confirm_password_hint">Confirm Password</string>
-    <string name="new_password_hint">New Password</string>
-    <string name="btn_confirm">Confirm</string>
-    <string name="remembered_password_txt">Remembered your pasword? </string>
+    <string name="profile_title">Profile</string>
+    <string name="name_title">Name</string>
+    <string name="email_title">Email</string>
+    <string name="gender_title">Gender</string>
+    <string name="age_title">Age</string>
+    <string name="weight_title">Weight</string>
+    <string name="height_title">Height</string>
+
+    <!-- Nav -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="training_title">Start Training</string>
+    <string name="logout_title">Log Out</string>
 
     <!-- Validações -->
     <string name="error_email_empty">Email is mandatory</string>

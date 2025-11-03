@@ -244,7 +244,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Objetivo Atual"
+                        android:text="@string/objective_title"
                         android:textColor="#FFFF"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -254,7 +254,7 @@
                         android:id="@+id/tvGoalDescription"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sem objetivo definido"
+                        android:text="@string/no_text"
                         android:textColor="@color/primary_foreground"
                         android:textSize="16sp"
                         android:layout_marginBottom="8dp" />
@@ -263,7 +263,7 @@
                         android:id="@+id/tvGoalTarget"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Distância alvo: — km"
+                        android:text="@string/no_text"
                         android:textColor="@color/secondary_muted_foreground"
                         android:textSize="14sp" />
 
@@ -330,7 +330,7 @@
                             android:text="@string/no_text"
                             android:textColor="@color/muted_foreground"
                             android:textStyle="bold"
-                            android:textSize="18sp" />
+                            android:textSize="24sp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -386,7 +386,7 @@
                 android:id="@+id/tvDrawerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Utilizador"
+                android:text="@string/user_placeholder"
                 android:textColor="#FFFF"
                 android:textStyle="bold"
                 android:textSize="16sp" />
@@ -395,7 +395,7 @@
                 android:id="@+id/tvDrawerEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="email@exemplo.com"
+                android:text="@string/email_placeholder"
                 android:textColor="#F3F4F6"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -428,7 +428,7 @@
                     android:id="@+id/navDashboardLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dashboard"
+                    android:text="@string/dashboard_title"
                     android:textColor="#FFFF"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -454,7 +454,7 @@
                     android:id="@+id/navTreinosLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Treinos"
+                    android:text="@string/start_training_title"
                     android:textColor="#FFFF" />
             </LinearLayout>
 
@@ -479,7 +479,7 @@
                     android:id="@+id/navPerfilLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Perfil"
+                    android:text="@string/profile_title"
                     android:textColor="#FFFF" />
             </LinearLayout>
 
@@ -509,7 +509,7 @@
                     android:id="@+id/navLogoutLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Terminar Sessão"
+                    android:text="@string/logout_title"
                     android:textColor="#EF4444" />
             </LinearLayout>
 

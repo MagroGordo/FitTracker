@@ -244,20 +244,18 @@
           android:id="@+id/tvDrawerName"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Utilizador"
+          android:text="@string/user_placeholder"
           android:textColor="#FFFF"
           android:textStyle="bold"
-          android:textSize="16sp"
-          android:fontFamily="maven_pro" />
+          android:textSize="16sp" />
 
       <TextView
           android:id="@+id/tvDrawerEmail"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="email@exemplo.com"
+          android:text="@string/email_placeholder"
           android:textColor="#F3F4F6"
-          android:textSize="13sp"
-          android:fontFamily="maven_pro" />
+          android:textSize="13sp" />
     </LinearLayout>
 
     <!-- Itens de Navegação -->
@@ -288,10 +286,9 @@
             android:id="@+id/navDashboardLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dashboard"
+            android:text="@string/dashboard_title"
             android:textColor="#FFFF"
-            android:textStyle="bold"
-            android:fontFamily="maven_pro" />
+            android:textStyle="bold" />
       </LinearLayout>
 
       <!-- Treinos -->
@@ -315,9 +312,8 @@
             android:id="@+id/navTreinosLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Treinos"
-            android:textColor="#FFFF"
-            android:fontFamily="maven_pro" />
+            android:text="@string/start_training_title"
+            android:textColor="#FFFF" />
       </LinearLayout>
 
       <!-- Perfil -->
@@ -341,9 +337,8 @@
             android:id="@+id/navPerfilLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Perfil"
-            android:textColor="#FFFF"
-            android:fontFamily="maven_pro" />
+            android:text="@string/profile_title"
+            android:textColor="#FFFF" />
       </LinearLayout>
 
       <View
@@ -372,9 +367,8 @@
             android:id="@+id/navLogoutLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Terminar Sessão"
-            android:textColor="#EF4444"
-            android:fontFamily="maven_pro" />
+            android:text="@string/logout_title"
+            android:textColor="#EF4444" />
       </LinearLayout>
 
     </LinearLayout>

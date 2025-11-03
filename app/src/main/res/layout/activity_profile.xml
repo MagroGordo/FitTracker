@@ -44,7 +44,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Perfil"
+                        android:text="@string/profile_title"
                         android:textColor="#FFFF"
                         android:textStyle="bold"
                         android:textSize="18sp"
@@ -78,7 +78,7 @@
                         android:id="@+id/tvHeaderName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="João Silva"
+                        android:text="@string/user_placeholder"
                         android:textColor="#FFFF"
                         android:textStyle="bold"
                         android:textSize="18sp"
@@ -89,7 +89,7 @@
                         android:id="@+id/tvHeaderEmail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="joao.silva@email.com"
+                        android:text="@string/email_placeholder"
                         android:textColor="#F3F4F6"
                         android:textSize="14sp"
                         android:fontFamily="maven_pro" />
@@ -118,7 +118,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Dados Pessoais"
+                            android:text="Personal Data"
                             android:textColor="#FFFF"
                             android:textStyle="bold"
                             android:textSize="16sp"
@@ -136,7 +136,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Nome"
+                            android:text="@string/name_title"
                             android:textColor="#9CA3AF"
                             android:textSize="14sp"
                             android:fontFamily="maven_pro" />
@@ -145,7 +145,7 @@
                             android:id="@+id/tvName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="João Silva"
+                            android:text="@string/no_text"
                             android:textColor="#FFFF"
                             android:textSize="14sp"
                             android:fontFamily="maven_pro" />
@@ -162,7 +162,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Email"
+                            android:text="@string/email_title"
                             android:textColor="#9CA3AF"
                             android:textSize="14sp"
                             android:fontFamily="maven_pro" />
@@ -171,7 +171,7 @@
                             android:id="@+id/tvEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="joao.silva@email.com"
+                            android:text="@string/no_text"
                             android:textColor="#FFFF"
                             android:textSize="14sp"
                             android:fontFamily="maven_pro" />
@@ -188,7 +188,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Sexo"
+                            android:text="@string/gender_title"
                             android:textColor="#9CA3AF"
                             android:textSize="14sp"
                             android:fontFamily="maven_pro" />
@@ -197,7 +197,7 @@
                             android:id="@+id/tvGender"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Masculino"
+                            android:text="@string/no_text"
                             android:textColor="#FFFF"
                             android:textSize="14sp"
                             android:fontFamily="maven_pro" />
@@ -214,7 +214,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Idade"
+                            android:text="@string/age_title"
                             android:textColor="#9CA3AF"
                             android:textSize="14sp" />
 
@@ -222,7 +222,7 @@
                             android:id="@+id/tvAge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="28 anos"
+                            android:text="@string/no_text"
                             android:textColor="#FFFF"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -238,7 +238,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Peso"
+                            android:text="@string/weight_title"
                             android:textColor="#9CA3AF"
                             android:textSize="14sp" />
 
@@ -246,7 +246,7 @@
                             android:id="@+id/tvWeight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="75 kg"
+                            android:text="@string/no_text"
                             android:textColor="#FFFF"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -261,7 +261,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Altura"
+                            android:text="@string/height_title"
                             android:textColor="#9CA3AF"
                             android:textSize="14sp" />
 
@@ -269,7 +269,7 @@
                             android:id="@+id/tvHeight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="178 cm"
+                            android:text="@string/no_text"
                             android:textColor="#FFFF"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -295,7 +295,7 @@
         android:background="#0F1622"
         android:padding="16dp">
 
-        <!-- Cabeçalho do Drawer -->
+        <!-- Cabeçalho -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="140dp"
@@ -314,29 +314,28 @@
                 android:id="@+id/tvDrawerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="João Silva"
+                android:text="@string/user_placeholder"
                 android:textColor="#FFFF"
                 android:textStyle="bold"
-                android:textSize="16sp"
-                android:fontFamily="maven_pro" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvDrawerEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="joao.silva@email.com"
+                android:text="@string/email_placeholder"
                 android:textColor="#F3F4F6"
-                android:textSize="13sp"
-                android:fontFamily="maven_pro" />
+                android:textSize="13sp" />
         </LinearLayout>
 
-        <!-- Itens -->
+        <!-- Itens de Navegação -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="24dp">
 
+            <!-- Dashboard -->
             <LinearLayout
                 android:id="@+id/navDashboard"
                 android:layout_width="match_parent"
@@ -357,12 +356,12 @@
                     android:id="@+id/navDashboardLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dashboard"
+                    android:text="@string/dashboard_title"
                     android:textColor="#FFFF"
-                    android:textStyle="bold"
-                    android:fontFamily="maven_pro" />
+                    android:textStyle="bold" />
             </LinearLayout>
 
+            <!-- Treinos -->
             <LinearLayout
                 android:id="@+id/navTreinos"
                 android:layout_width="match_parent"
@@ -383,11 +382,11 @@
                     android:id="@+id/navTreinosLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Treinos"
-                    android:textColor="#FFFF"
-                    android:fontFamily="maven_pro" />
+                    android:text="@string/start_training_title"
+                    android:textColor="#FFFF" />
             </LinearLayout>
 
+            <!-- Perfil -->
             <LinearLayout
                 android:id="@+id/navPerfil"
                 android:layout_width="match_parent"
@@ -408,9 +407,8 @@
                     android:id="@+id/navPerfilLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Perfil"
-                    android:textColor="#FFFF"
-                    android:fontFamily="maven_pro" />
+                    android:text="@string/profile_title"
+                    android:textColor="#FFFF" />
             </LinearLayout>
 
             <View
@@ -419,6 +417,7 @@
                 android:background="#1E293B"
                 android:layout_marginBottom="12dp" />
 
+            <!-- Terminar Sessão -->
             <LinearLayout
                 android:id="@+id/navLogout"
                 android:layout_width="match_parent"
@@ -438,10 +437,10 @@
                     android:id="@+id/navLogoutLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Terminar Sessão"
-                    android:textColor="#EF4444"
-                    android:fontFamily="maven_pro" />
+                    android:text="@string/logout_title"
+                    android:textColor="#EF4444" />
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
