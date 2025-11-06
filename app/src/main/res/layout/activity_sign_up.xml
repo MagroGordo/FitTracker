@@ -182,7 +182,8 @@
                     android:text="@string/account_txt"
                     android:textColor="#D1D5DB"
                     android:fontFamily="maven_pro"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_marginEnd="8dp" />
 
                 <TextView
                     android:id="@+id/txtEnter"

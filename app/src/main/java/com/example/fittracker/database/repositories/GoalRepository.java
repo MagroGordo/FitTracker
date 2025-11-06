@@ -62,7 +62,6 @@ public class GoalRepository {
                 return;
             }
 
-            // Seleciona tipo aleatório
             GoalType[] types = GoalType.values();
             GoalType randomType = types[new Random().nextInt(types.length)];
 

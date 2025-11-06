@@ -628,16 +628,13 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Constrói a descrição do objetivo baseado no tipo
-     */
     private String buildGoalDescription(String goalType, Goal goal) {
         switch (goalType) {
-            case "Iniciante":
+            case "Beginner":
                 return "Beginner";
-            case "Intermédio":
+            case "Intermediate":
                 return "Intermediate";
-            case "Avançado":
+            case "Advanced":
                 return "Advanced";
             default:
                 return "Custom";
