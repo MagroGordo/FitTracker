@@ -14,7 +14,7 @@ import com.example.fittracker.database.daos.WorkoutDAO;
 import com.example.fittracker.database.daos.GoalDAO;
 import com.example.fittracker.database.DateConverter;
 
-@Database(entities = {User.class, Workout.class, Goal.class}, version = 2)
+@Database(entities = {User.class, Workout.class, Goal.class}, version = 3)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -29,10 +29,13 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(
-                            context.getApplicationContext(),
-                            AppDatabase.class,
-                            "fittracker_db"
-                    ).build();
+                                    context.getApplicationContext(),
+                                    AppDatabase.class,
+                                    "fittracker_db"
+                            )
+                            // 👇 Isto permite que o Room apague e recrie a BD se a versão mudar
+                            .fallbackToDestructiveMigration()
+                            .build();
                 }
             }
         }

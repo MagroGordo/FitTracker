@@ -30,9 +30,13 @@ public class Goal {
     @ColumnInfo(name = "daily_calories")
     private double dailyCalories;
 
+    @ColumnInfo(name = "type")
+    private String type; // 👈 novo campo
+
     public Goal() {
         this.dailyDistance = 5.0;
         this.dailyCalories = 300.0;
+        this.type = "Intermédio";
     }
 
     public Goal(long userId) {
@@ -53,6 +57,9 @@ public class Goal {
     public double getDailyCalories() { return dailyCalories; }
     public void setDailyCalories(double dailyCalories) { this.dailyCalories = dailyCalories; }
 
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
     @Override
     public String toString() {
         return "Goal{" +
@@ -60,6 +67,7 @@ public class Goal {
                 ", userId=" + userId +
                 ", dailyDistance=" + dailyDistance +
                 ", dailyCalories=" + dailyCalories +
+                ", type='" + type + '\'' +
                 '}';
     }
 }

@@ -139,6 +139,17 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
+        Calendar hoje = Calendar.getInstance();
+        Calendar data14AnosAtras = Calendar.getInstance();
+        data14AnosAtras.add(Calendar.YEAR, -14);
+
+        if (selectedDob.after(data14AnosAtras)) {
+            inputBirthday.setError("Tem de ter pelo menos 14 anos para criar conta");
+            inputBirthday.requestFocus();
+            Toast.makeText(this, "Tem de ter pelo menos 14 anos para criar conta", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         double altura, peso;
         try {
             altura = Double.parseDouble(alturaStr);

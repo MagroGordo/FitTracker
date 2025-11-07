@@ -25,7 +25,7 @@ public class GoalRepository {
     public enum GoalType {
         BEGINNER("Iniciante", 2.0, 150.0),      // 2km, 150 kcal
         INTERMEDIATE("Intermédio", 5.0, 300.0), // 5km, 300 kcal
-        ADVANCED("Avançado", 10.0, 600.0);       // 10km, 600 kcal
+        ADVANCED("Avançado", 10.0, 600.0);      // 10km, 600 kcal
 
         private final String displayName;
         private final double dailyDistance;
@@ -69,6 +69,7 @@ public class GoalRepository {
             Goal goal = new Goal(userId);
             goal.setDailyDistance(randomType.getDailyDistance());
             goal.setDailyCalories(randomType.getDailyCalories());
+            goal.setType(randomType.getDisplayName()); // 👈 novo campo
 
             long goalId = goalDao.insert(goal);
             goal.setId(goalId);
@@ -111,6 +112,7 @@ public class GoalRepository {
         data.put("userId", goal.getUserId());
         data.put("dailyDistance", goal.getDailyDistance());
         data.put("dailyCalories", goal.getDailyCalories());
+        data.put("type", goal.getType()); // 👈 agora envia o tipo
         data.put("updatedAt", System.currentTimeMillis());
 
         firestore.collection("goals")
@@ -147,6 +149,9 @@ public class GoalRepository {
 
                         Double dc = doc.getDouble("dailyCalories");
                         if (dc != null) goal.setDailyCalories(dc);
+
+                        String type = doc.getString("type"); // 👈 novo campo
+                        if (type != null) goal.setType(type);
 
                         // Atualiza ou insere localmente
                         Goal existing = goalDao.getByUser(goal.getUserId());
